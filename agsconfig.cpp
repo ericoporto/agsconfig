@@ -78,6 +78,7 @@ int main(int, char**)
 
     AgsData agsData = AgsData();
     agsData.SetSaneInitialValue();
+    agsData.MergeIn(agsData_current);
 
     vector<string> scalingOptions = {"max_round", "stretch", "proportional", "1", "2", "3" };
     vector<string> soundOptionsDigiid = { "auto", "none", "ALSA", "ARTS", "ESSD", "JACK", "OSSD", "SGIA", "SDL" };

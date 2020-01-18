@@ -206,7 +206,7 @@ string AgsData::ToIniString() {
     if( language.translation.has_value())
         ini.sections["language"]["translation"] = language.translation.value();
 
-    if( misc.cachemax.has_value())
+    if( misc.log.has_value())
         ini.sections["misc"]["log"] = BoolToStr(misc.log.value());
     if( misc.datafile.has_value())
         ini.sections["misc"]["datafile"] = misc.datafile.value();
@@ -302,6 +302,8 @@ void AgsData::LoadFromIni(const string &filename_with_path) {
         misc.antialias = StrToBool(ini.sections["misc"]["antialias"]);
     if(!ini.sections["misc"]["cachemax"].empty())
         misc.cachemax = StrToInt(ini.sections["misc"]["cachemax"]);
+
+
 }
 
 void AgsData::Reset() {

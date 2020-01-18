@@ -162,12 +162,12 @@ void AgsTold::InitFromTell(const string agsExecutable) {
     if(!ini.sections["config@misc"]["shared_data_dir"].empty())
         config_AT_misc.shared_data_dir = ini.sections["config@misc"]["shared_data_dir"];
 
-    if(!ini.sections["config@path"]["default"].empty())
-        configPath._default = ini.sections["config@path"]["default"];
-    if(!ini.sections["config@path"]["global"].empty())
-        configPath.global = ini.sections["config@path"]["global"];
-    if(!ini.sections["config@path"]["user"].empty())
-        configPath.user = ini.sections["config@path"]["user"];
+    if(!ini.sections["config-path"]["default"].empty())
+        configPath._default = ini.sections["config-path"]["default"];
+    if(!ini.sections["config-path"]["global"].empty())
+        configPath.global = ini.sections["config-path"]["global"];
+    if(!ini.sections["config-path"]["user"].empty())
+        configPath.user = ini.sections["config-path"]["user"];
 
     if(!ini.sections["data"]["basepack"].empty())
         data.basepack = ini.sections["data"]["basepack"];
