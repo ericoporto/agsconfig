@@ -9,7 +9,7 @@
 #include<vector>
 using namespace std;
 
-class agstold {
+class AgsTold {
     struct Config_AT_graphics {
         string driver;
         bool windowed;
@@ -92,6 +92,8 @@ public:
     Data data = Data();
     Engine engine = Engine();
     Graphicdriver graphicdriver = Graphicdriver();
+
+    void InitFromTell(string agsExecutable);
 
 };
 

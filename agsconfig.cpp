@@ -17,7 +17,6 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "inipp.h"
-#include "process.hpp"
 #include "agsdata.h"
 #include <fstream>
 #include <string>
@@ -107,23 +106,11 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     ImGuiStyle& style = ImGui::GetStyle();
 
-    std::shared_ptr<std::string> output;
-    output = std::make_shared<std::string>();
 
-    std::string agsexecutable = "./agsimgui_demo";
-    std::string cmd_get_ags_config = agsexecutable + " --tell-all";
-
-    TinyProcessLib::Process process(cmd_get_ags_config, "", [output](const char *bytes, size_t n) {
-        *output += std::string(bytes, n);
-    });
-
-    inipp::Ini<char> ini;
-    std::stringstream iniStream(*output);
-
-    ini.parse(iniStream);
     ini.sections["config-path"]["default"];
 
-    AgsData agsdata;
+    AgsData agsdata_default;
+    agsdata_default.LoadFromIni()
 
         // Main loop
     bool done = false;

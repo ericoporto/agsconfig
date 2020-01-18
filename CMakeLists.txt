@@ -25,6 +25,8 @@ endif ()
 
 add_executable (AGSCONFIG
         agsconfig.cpp
+        AgsTold.cpp
+        AgsTold.h
         agsdata.cpp
         agsdata.h
         libs/inipp/inipp/inipp.h
@@ -36,7 +38,7 @@ add_executable (AGSCONFIG
         libs/imgui/examples/imgui_impl_sdl.cpp
         libs/imgui/examples/imgui_impl_sdl.h
         libs/imgui/examples/imgui_impl_opengl2.h
-        libs/imgui/examples/imgui_impl_opengl2.cpp agstold.cpp agstold.h)
+        libs/imgui/examples/imgui_impl_opengl2.cpp util_str.h)
 
 
 find_package(OpenGL)
