@@ -2,9 +2,6 @@
 // Created by erico on 18/01/2020.
 //
 
-#ifndef AGSCONFIG_UTIL_STR_H
-#define AGSCONFIG_UTIL_STR_H
-
 #include <string>
 using namespace std;
 
@@ -31,5 +28,3 @@ int StrToInt(const string& i_str){
 float StrToFloat(const string& f_str){
     return stof(f_str);
 }
-
-#endif //AGSCONFIG_UTIL_STR_H

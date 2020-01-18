@@ -1,7 +1,7 @@
 //
 // Created by erico on 18/01/2020.
 //
-
+#pragma once
 #ifndef AGSCONFIG_AGSDATA_H
 #define AGSCONFIG_AGSDATA_H
 
@@ -96,6 +96,7 @@ public:
     void LoadFromIni(const string& filename_with_path);
     string ToIniString();
     void WriteToFile(const string& filename_with_path);
+    void MergeIn(AgsData data);
 };
 
 

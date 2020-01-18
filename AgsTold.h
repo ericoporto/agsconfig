@@ -1,7 +1,7 @@
 //
 // Created by erico on 18/01/2020.
 //
-
+#pragma once
 #ifndef AGSCONFIG_AGSTOLD_H
 #define AGSCONFIG_AGSTOLD_H
 
@@ -88,7 +88,7 @@ public:
     Config_AT_mouse config_AT_mouse = Config_AT_mouse();
     Config_AT_language config_AT_language = Config_AT_language();
     Config_AT_misc config_AT_misc = Config_AT_misc();
-    ConfigPath config_AT_path = ConfigPath();
+    ConfigPath configPath = ConfigPath();
     Data data = Data();
     Engine engine = Engine();
     Graphicdriver graphicdriver = Graphicdriver();

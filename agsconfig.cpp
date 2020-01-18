@@ -17,7 +17,8 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "inipp.h"
-#include "agsdata.h"
+#include "AgsData.h"
+#include "AgsTold.h"
 #include <fstream>
 #include <string>
 #include <iostream>
@@ -106,11 +107,21 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     ImGuiStyle& style = ImGui::GetStyle();
 
-
-    ini.sections["config-path"]["default"];
+    AgsTold agsTold;
+    agsTold.InitFromTell("./agsimgui_demo");
 
     AgsData agsdata_default;
-    agsdata_default.LoadFromIni()
+    AgsData agsdata_global;
+    AgsData agsdata_user;
+    agsdata_default.LoadFromIni(agsTold.configPath._default);
+    agsdata_global.LoadFromIni(agsTold.configPath.global);
+    agsdata_user.LoadFromIni(agsTold.configPath.user);
+
+    AgsData agsdata;
+    agsdata.Reset();
+    agsdata.MergeIn(agsdata_default);
+    agsdata.MergeIn(agsdata_user);
+    agsdata.MergeIn(agsdata_global);
 
         // Main loop
     bool done = false;

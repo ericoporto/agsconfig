@@ -25,10 +25,12 @@ endif ()
 
 add_executable (AGSCONFIG
         agsconfig.cpp
+        AgsConfigUtilStr.h
+        AgsConfigUtilStr.cpp
         AgsTold.cpp
         AgsTold.h
-        agsdata.cpp
-        agsdata.h
+        AgsData.cpp
+        AgsData.h
         libs/inipp/inipp/inipp.h
         libs/imgui/imgui.h
         libs/imgui/imgui.cpp
@@ -38,7 +40,7 @@ add_executable (AGSCONFIG
         libs/imgui/examples/imgui_impl_sdl.cpp
         libs/imgui/examples/imgui_impl_sdl.h
         libs/imgui/examples/imgui_impl_opengl2.h
-        libs/imgui/examples/imgui_impl_opengl2.cpp util_str.h)
+        libs/imgui/examples/imgui_impl_opengl2.cpp )
 
 
 find_package(OpenGL)
