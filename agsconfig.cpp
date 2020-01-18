@@ -116,7 +116,7 @@ int main(int, char**)
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL2_Init();
 
-
+    bool runTheGameBeforeQuit = false;
     //ImGuiStyle::ScaleAllSizes(0.5f);
 
     // Load Fonts
@@ -176,109 +176,137 @@ int main(int, char**)
         ImGui::Begin("AGS Config",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
         ImGui::PopStyleVar();
 
-        ImGui::BeginGroup();
-        ImGui::Text("Driver:"); ImGui::SameLine();
-        if(ImGui::BeginCombo("##driver",agsData.graphics.driver.value().c_str() )){
-            vector<string>::iterator it;
-            for(it = agsTold.graphicdriver.drivers.begin();
-                it != agsTold.graphicdriver.drivers.end();
-                it++) {
+        ImGui::SetNextTreeNodeOpen(true,ImGuiCond_Once);
+        if(ImGui::TreeNode("Graphics options")) {
+            ImGui::Text("Driver:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##driver", agsData.graphics.driver.value().c_str())) {
+                vector<string>::iterator it;
+                for (it = agsTold.graphicdriver.drivers.begin();
+                     it != agsTold.graphicdriver.drivers.end();
+                     it++) {
 
-                if(ImGui::Selectable(it->c_str())) agsData.graphics.driver = it->c_str();
+                    if (ImGui::Selectable(it->c_str())) agsData.graphics.driver = it->c_str();
+                }
+
+                ImGui::EndCombo();
             }
 
-            ImGui::EndCombo();
-        }
+            ImGui::Checkbox("Start in windowed mode", &(agsData.graphics.windowed.value()));
 
-        ImGui::Checkbox("Start in windowed mode",&(agsData.graphics.windowed.value()));
+            ImGui::Text("Fullscreen scale:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##Fullscreen scale", agsData.graphics.game_scale_fs.value().c_str())) {
+                vector<string>::iterator it;
+                for (it = scalingOptions.begin();
+                     it != scalingOptions.end();
+                     it++) {
 
-        ImGui::Text("Fullscreen scale:"); ImGui::SameLine();
-        if(ImGui::BeginCombo("##Fullscreen scale",agsData.graphics.game_scale_fs.value().c_str() )){
-            vector<string>::iterator it;
-            for(it = scalingOptions.begin();
-                it != scalingOptions.end();
-                it++) {
+                    if (ImGui::Selectable(it->c_str())) agsData.graphics.game_scale_fs = it->c_str();
+                }
 
-                if(ImGui::Selectable(it->c_str())) agsData.graphics.game_scale_fs = it->c_str();
+                ImGui::EndCombo();
             }
 
-            ImGui::EndCombo();
-        }
+            ImGui::Text("Windowed scale:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##Windowed scale", agsData.graphics.game_scale_win.value().c_str())) {
+                vector<string>::iterator it;
+                for (it = scalingOptions.begin();
+                     it != scalingOptions.end();
+                     it++) {
 
-        ImGui::Text("Windowed scale:"); ImGui::SameLine();
-        if(ImGui::BeginCombo("##Windowed scale",agsData.graphics.game_scale_win.value().c_str() )){
-            vector<string>::iterator it;
-            for(it = scalingOptions.begin();
-                it != scalingOptions.end();
-                it++) {
+                    if (ImGui::Selectable(it->c_str())) agsData.graphics.game_scale_win = it->c_str();
+                }
 
-                if(ImGui::Selectable(it->c_str())) agsData.graphics.game_scale_win = it->c_str();
+                ImGui::EndCombo();
             }
 
-            ImGui::EndCombo();
-        }
+            ImGui::Text("Sprite Cache Maximum Size:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##Sprite Cache", IntToStr(agsData.misc.cachemax.value()).c_str())) {
+                vector<string>::iterator it;
+                vector<int>::iterator it2;
+                for (int i = 0;
+                     i < spriteCacheOptions.size();
+                     i++) {
 
-        ImGui::Text("Sprite Cache Maximum Size:"); ImGui::SameLine();
-        if(ImGui::BeginCombo("##Sprite Cache", IntToStr(agsData.misc.cachemax.value()).c_str() ) ){
-            vector<string>::iterator it;
-            vector<int>::iterator it2;
-            for(int i=0;
-                i<spriteCacheOptions.size();
-                i++) {
+                    if (ImGui::Selectable(spriteCacheOptions[i].c_str()))
+                        agsData.misc.cachemax = spriteCacheOptions_value[i];
+                }
 
-                if(ImGui::Selectable(spriteCacheOptions[i].c_str())) agsData.misc.cachemax = spriteCacheOptions_value[i];
+                ImGui::EndCombo();
             }
 
-            ImGui::EndCombo();
+            ImGui::Checkbox("Vertical Sync", &(agsData.graphics.vsync.value()));
+            ImGui::Checkbox("Render sprites at screen resolution", &(agsData.graphics.render_at_screenres.value()));
+            ImGui::Checkbox("Match Device Ratio", &(agsData.graphics.match_device_ratio.value()));
+            ImGui::TreePop();
         }
-
-        ImGui::Checkbox("Vertical Sync",&(agsData.graphics.vsync.value()));
-        ImGui::Checkbox("Render sprites at screen resolution",&(agsData.graphics.render_at_screenres.value()));
-        ImGui::Checkbox("Match Device Ratio",&(agsData.graphics.match_device_ratio.value()));
-        ImGui::EndGroup();
 
         ImGui::Separator();
-        ImGui::Text("Sound");               // Display some text (you can use a format strings too)
 
-        ImGui::Text("Sound Driver:"); ImGui::SameLine();
-        if(ImGui::BeginCombo("##Sound Driver",agsData.sound.digiid.value().c_str() )){
-            vector<string>::iterator it;
-            for(it = soundOptionsDigiid.begin();
-                it != soundOptionsDigiid.end();
-                it++) {
 
-                if(ImGui::Selectable(it->c_str())) agsData.sound.digiid = it->c_str();;
+        ImGui::SetNextTreeNodeOpen(true,ImGuiCond_Once);
+        if(ImGui::TreeNode("Sound options")) {
+            ImGui::Text("Sound");               // Display some text (you can use a format strings too)
+
+            ImGui::Text("Sound Driver:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##Sound Driver", agsData.sound.digiid.value().c_str())) {
+                vector<string>::iterator it;
+                for (it = soundOptionsDigiid.begin();
+                     it != soundOptionsDigiid.end();
+                     it++) {
+
+                    if (ImGui::Selectable(it->c_str())) agsData.sound.digiid = it->c_str();;
+                }
+
+                ImGui::EndCombo();
             }
 
-            ImGui::EndCombo();
-        }
+            ImGui::Text("MIDI Driver:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##MIDI Driver", agsData.sound.midiid.value().c_str())) {
+                vector<string>::iterator it;
+                for (it = soundOptionsMidiid.begin();
+                     it != soundOptionsMidiid.end();
+                     it++) {
 
-        ImGui::Text("MIDI Driver:"); ImGui::SameLine();
-        if(ImGui::BeginCombo("##MIDI Driver",agsData.sound.midiid.value().c_str() )){
-            vector<string>::iterator it;
-            for(it = soundOptionsMidiid.begin();
-                it != soundOptionsMidiid.end();
-                it++) {
+                    if (ImGui::Selectable(it->c_str())) agsData.sound.midiid = it->c_str();
+                }
 
-                if(ImGui::Selectable(it->c_str())) agsData.sound.midiid = it->c_str();
+                ImGui::EndCombo();
             }
 
-            ImGui::EndCombo();
+            ImGui::Checkbox("Threaded Audio", &(agsData.sound.threaded.value()));
+            ImGui::Checkbox("Use speech pack", &(agsData.sound.usespeech.value()));
+            ImGui::TreePop();
         }
 
-        ImGui::Checkbox("Threaded Audio",&(agsData.sound.threaded.value()));
-        ImGui::Checkbox("Use speech pack",&(agsData.sound.usespeech.value()));
+        ImGui::Separator();
+
+        ImGui::SetNextTreeNodeOpen(true,ImGuiCond_Once);
+        if(ImGui::TreeNode("Mouse options")) {
+            ImGui::Text("Mouse");
+
+            ImGui::SliderFloat("Mouse speed",&(agsData.mouse.speed.value()),0.1f,10.0f,"%.1f"); //may not work depending on locale in ags
+            ImGui::TreePop();
+        }
 
 
         ImGui::Separator();
-        ImGui::Text("Mouse");
-        ImGui::Separator();
 
-        ImGui::Button("Save");
+        if(ImGui::Button("Save")) {
+            break;
+        };
         ImGui::SameLine();
-        ImGui::Button("Save and Run");
+        if(ImGui::Button("Save and Run")) {
+            runTheGameBeforeQuit = true;
+            break;
+        }
         ImGui::SameLine();
-        ImGui::Button("Cancel");
+        if(ImGui::Button("Cancel")) break;
 
         ImGui::End();
 
@@ -290,6 +318,10 @@ int main(int, char**)
         //glUseProgram(0); // You may want this if using this code in an OpenGL 3+ context where shaders may be bound
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
+    }
+
+    if(runTheGameBeforeQuit){
+        agsTold.RunGame();
     }
 
     // Cleanup

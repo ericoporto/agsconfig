@@ -82,6 +82,7 @@ class AgsTold {
         Graphicdriver();
     };
 
+    string executableName;
 public:
     Config_AT_graphics config_AT_graphics = Config_AT_graphics();
     Config_AT_sound config_AT_sound = Config_AT_sound();
@@ -94,6 +95,7 @@ public:
     Graphicdriver graphicdriver = Graphicdriver();
 
     void InitFromTell(string agsExecutable);
+    void RunGame();
 
 };
 

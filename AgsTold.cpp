@@ -83,12 +83,13 @@ AgsTold::Graphicdriver::Graphicdriver() {
 }
 
 void AgsTold::InitFromTell(const string agsExecutable) {
+    executableName = agsExecutable;
     string current_dir = get_working_path();
     std::shared_ptr<std::string> output;
     output = std::make_shared<std::string>();
 
     std::string cmd_get_ags_config = "";
-    cmd_get_ags_config = current_dir + "/" + agsExecutable + " " + "--tell-all";
+    cmd_get_ags_config = current_dir + "/" + executableName + " " + "--tell-all";
 
     TinyProcessLib::Process process(cmd_get_ags_config, "", [output](const char *bytes, size_t n) {
         *output += std::string(bytes, n);
@@ -191,4 +192,14 @@ void AgsTold::InitFromTell(const string agsExecutable) {
     if(!ini.sections["graphicdriver"]["2"].empty())
         graphicdriver.drivers.push_back(ini.sections["graphicdriver"]["2"]);
 
+}
+
+void AgsTold::RunGame() {
+    if(executableName.empty()) return;
+
+    string current_dir = get_working_path();
+    std::string cmd_get_ags_config = "";
+    cmd_get_ags_config = current_dir + "/" + executableName + " &";
+
+    TinyProcessLib::Process process(cmd_get_ags_config);
 }
