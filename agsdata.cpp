@@ -48,11 +48,34 @@ AgsData::Graphics::Graphics() {
     vsync = true;
 }
 
+void AgsData::Graphics::Reset() {
+    driver.reset();
+    windowed.reset();
+    screen_def.reset();
+    screen_width.reset();
+    screen_height.reset();
+    match_device_ratio.reset();
+    game_scale_fs.reset();
+    game_scale_win.reset();
+    filter.reset();
+    refresh.reset();
+    render_at_screenres.reset();
+    supersampling.reset();
+    vsync.reset();
+}
+
 AgsData::Sound::Sound() {
     digiid = "";
     midiid = "";
     usespeech = true;
     threaded = true;
+}
+
+void AgsData::Sound::Reset() {
+    digiid.reset();
+    midiid.reset();
+    usespeech.reset();
+    threaded.reset();
 }
 
 AgsData::Mouse::Mouse() {
@@ -63,8 +86,20 @@ AgsData::Mouse::Mouse() {
     speed = 1.0f;
 }
 
+void AgsData::Mouse::Reset() {
+    auto_lock.reset();
+    control_when.reset();
+    control_enabled.reset();
+    speed_def.reset();
+    speed.reset();
+}
+
 AgsData::Language::Language() {
     translation = "";
+}
+
+void AgsData::Language::Reset() {
+    translation.reset();
 }
 
 AgsData::Misc::Misc() {
@@ -77,10 +112,26 @@ AgsData::Misc::Misc() {
     cachemax = 131072;
 }
 
+void AgsData::Misc::Reset() {
+    log.reset();
+    datafile.reset();
+    datadir.reset();
+    user_data_dir.reset();
+    shared_data_dir.reset();
+    antialias.reset();
+    cachemax.reset();
+}
+
 AgsData::Override::Override() {
     multitasking = false;
     os = "";
     upscale = false;
+}
+
+void AgsData::Override::Reset() {
+    multitasking.reset();
+    os.reset();
+    upscale.reset();
 }
 
 AgsData::Disabled::Disabled() {
@@ -89,44 +140,80 @@ AgsData::Disabled::Disabled() {
     filters = false;
 }
 
+void AgsData::Disabled::Reset() {
+    render_at_screenres.reset();
+    speechvox.reset();
+    filters.reset();
+}
+
 string AgsData::ToIniString() {
     string ini_string;
     std::stringstream iniStream(ini_string);
     inipp::Ini<char> ini;
-    ini.sections["graphics"]["driver"] = graphics.driver;
-    ini.sections["graphics"]["windowed"] = BoolToStr(graphics.windowed);
-    ini.sections["graphics"]["screen_def"] = graphics.screen_def;
-    ini.sections["graphics"]["screen_width"] = IntToStr(graphics.screen_width);
-    ini.sections["graphics"]["screen_height"] = IntToStr(graphics.screen_height);
-    ini.sections["graphics"]["match_device_ratio"] = BoolToStr(graphics.match_device_ratio);
-    ini.sections["graphics"]["game_scale_fs"] = graphics.game_scale_fs;
-    ini.sections["graphics"]["game_scale_win"] = graphics.game_scale_win;
-    ini.sections["graphics"]["filter"] = graphics.filter;
-    ini.sections["graphics"]["refresh"] = IntToStr(graphics.refresh);
-    ini.sections["graphics"]["render_at_screenres"] = BoolToStr(graphics.render_at_screenres);
-    ini.sections["graphics"]["supersampling"] = IntToStr(graphics.supersampling);
-    ini.sections["graphics"]["vsync"] = BoolToStr(graphics.vsync);
+    if( graphics.driver.has_value())
+        ini.sections["graphics"]["driver"] = graphics.driver.value();
+    if( graphics.windowed.has_value())
+        ini.sections["graphics"]["windowed"] = BoolToStr(graphics.windowed.value());
+    if( graphics.screen_def.has_value())
+        ini.sections["graphics"]["screen_def"] = graphics.screen_def.value();
+    if( graphics.screen_width.has_value())
+        ini.sections["graphics"]["screen_width"] = IntToStr(graphics.screen_width.value());
+    if( graphics.screen_height.has_value())
+        ini.sections["graphics"]["screen_height"] = IntToStr(graphics.screen_height.value());
+    if( graphics.match_device_ratio.has_value())
+        ini.sections["graphics"]["match_device_ratio"] = BoolToStr(graphics.match_device_ratio.value());
+    if( graphics.game_scale_fs.has_value())
+        ini.sections["graphics"]["game_scale_fs"] = graphics.game_scale_fs.value();
+    if( graphics.game_scale_win.has_value())
+        ini.sections["graphics"]["game_scale_win"] = graphics.game_scale_win.value();
+    if( graphics.filter.has_value())
+        ini.sections["graphics"]["filter"] = graphics.filter.value();
+    if( graphics.refresh.has_value())
+        ini.sections["graphics"]["refresh"] = IntToStr(graphics.refresh.value());
+    if( graphics.render_at_screenres.has_value())
+        ini.sections["graphics"]["render_at_screenres"] = BoolToStr(graphics.render_at_screenres.value());
+    if( graphics.supersampling.has_value())
+        ini.sections["graphics"]["supersampling"] = IntToStr(graphics.supersampling.value());
+    if( graphics.vsync.has_value())
+        ini.sections["graphics"]["vsync"] = BoolToStr(graphics.vsync.value());
 
-    ini.sections["sound"]["digiid"] = sound.digiid;
-    ini.sections["sound"]["midiid"] = sound.midiid;
-    ini.sections["sound"]["usespeech"] = BoolToStr(sound.usespeech);
-    ini.sections["sound"]["threaded"] = BoolToStr(sound.threaded);
+    if( sound.digiid.has_value())
+        ini.sections["sound"]["digiid"] = sound.digiid.value();
+    if( sound.midiid.has_value())
+        ini.sections["sound"]["midiid"] = sound.midiid.value();
+    if( sound.usespeech.has_value())
+        ini.sections["sound"]["usespeech"] = BoolToStr(sound.usespeech.value());
+    if( sound.threaded.has_value())
+        ini.sections["sound"]["threaded"] = BoolToStr(sound.threaded.value());
 
-    ini.sections["mouse"]["auto_lock"] = BoolToStr(mouse.auto_lock);
-    ini.sections["mouse"]["control_when"] = mouse.control_when;
-    ini.sections["mouse"]["control_enabled"] = BoolToStr(mouse.control_enabled);
-    ini.sections["mouse"]["speed_def"] = mouse.speed_def;
-    ini.sections["mouse"]["speed"] = FloatToStr(mouse.speed);
+    if( mouse.auto_lock.has_value())
+        ini.sections["mouse"]["auto_lock"] = BoolToStr(mouse.auto_lock.value());
+    if( mouse.control_when.has_value())
+        ini.sections["mouse"]["control_when"] = mouse.control_when.value();
+    if( mouse.control_enabled.has_value())
+        ini.sections["mouse"]["control_enabled"] = BoolToStr(mouse.control_enabled.value());
+    if( mouse.speed_def.has_value())
+        ini.sections["mouse"]["speed_def"] = mouse.speed_def.value();
+    if( mouse.speed.has_value())
+        ini.sections["mouse"]["speed"] = FloatToStr(mouse.speed.value());
 
-    ini.sections["language"]["translation"] = language.translation;
+    if( language.translation.has_value())
+        ini.sections["language"]["translation"] = language.translation.value();
 
-    ini.sections["misc"]["log"] = BoolToStr(misc.log);
-    ini.sections["misc"]["datafile"] = misc.datafile;
-    ini.sections["misc"]["datadir"] = misc.datadir;
-    ini.sections["misc"]["user_data_dir"] = misc.user_data_dir;
-    ini.sections["misc"]["shared_data_dir"] = misc.shared_data_dir;
-    ini.sections["misc"]["antialias"] = BoolToStr(misc.antialias);
-    ini.sections["misc"]["cachemax"] = IntToStr(misc.cachemax);
+    if( misc.cachemax.has_value())
+        ini.sections["misc"]["log"] = BoolToStr(misc.log.value());
+    if( misc.datafile.has_value())
+        ini.sections["misc"]["datafile"] = misc.datafile.value();
+    if( misc.datadir.has_value())
+        ini.sections["misc"]["datadir"] = misc.datadir.value();
+    if( misc.user_data_dir.has_value())
+        ini.sections["misc"]["user_data_dir"] = misc.user_data_dir.value();
+    if( misc.shared_data_dir.has_value())
+        ini.sections["misc"]["shared_data_dir"] = misc.shared_data_dir.value();
+    if( misc.antialias.has_value())
+        ini.sections["misc"]["antialias"] = BoolToStr(misc.antialias.value());
+    if( misc.cachemax.has_value())
+        ini.sections["misc"]["cachemax"] = IntToStr(misc.cachemax.value());
 
     ini.generate(iniStream);
     ini_string = iniStream.str();
@@ -178,4 +265,14 @@ void AgsData::LoadFromIni(const string &filename_with_path) {
     misc.shared_data_dir = ini.sections["misc"]["shared_data_dir"];
     misc.antialias = StrToBool(ini.sections["misc"]["antialias"]);
     misc.cachemax = StrToInt(ini.sections["misc"]["cachemax"]);
+}
+
+void AgsData::Reset() {
+    graphics.Reset();
+    sound.Reset();
+    mouse.Reset();
+    language.Reset();
+    misc.Reset();
+    override.Reset();
+    disabled.Reset();
 }

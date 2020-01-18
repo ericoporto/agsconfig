@@ -6,71 +6,79 @@
 #define AGSCONFIG_AGSDATA_H
 
 #include<string>
+#include<optional>
 using namespace std;
 
 class AgsData {
     struct Graphics {
-        string driver;
-        bool windowed;
-        string screen_def;
-        int screen_width;
-        int screen_height;
-        bool match_device_ratio;
-        string game_scale_fs;
-        string game_scale_win;
-        string filter;
-        int refresh;
-        bool render_at_screenres;
-        int supersampling;
-        bool vsync;
+        optional<string> driver;
+        optional<bool> windowed;
+        optional<string> screen_def;
+        optional<int> screen_width;
+        optional<int> screen_height;
+        optional<bool> match_device_ratio;
+        optional<string> game_scale_fs;
+        optional<string> game_scale_win;
+        optional<string> filter;
+        optional<int> refresh;
+        optional<bool> render_at_screenres;
+        optional<int> supersampling;
+        optional<bool> vsync;
         Graphics();
+        void Reset();
     };
 
     struct Sound {
-        string digiid;
-        string midiid;
-        bool usespeech;
-        bool threaded;
+        optional<string> digiid;
+        optional<string> midiid;
+        optional<bool> usespeech;
+        optional<bool> threaded;
         Sound();
+        void Reset();
     };
 
     struct Mouse {
-        bool auto_lock;
-        string control_when;
-        bool control_enabled;
-        string speed_def;
-        float speed;
+        optional<bool> auto_lock;
+        optional<string> control_when;
+        optional<bool> control_enabled;
+        optional<string> speed_def;
+        optional<float> speed;
         Mouse();
+        void Reset();
     };
 
     struct Language {
-        string translation;
+        optional<string> translation;
         Language();
+        void Reset();
     };
 
     struct Misc {
-        bool log;
-        string datafile;
-        string datadir;
-        string user_data_dir;
-        string shared_data_dir;
-        bool antialias;
-        int cachemax;
+        optional<bool> log;
+        optional<string> datafile;
+        optional<string> datadir;
+        optional<string> user_data_dir;
+        optional<string> shared_data_dir;
+        optional<bool> antialias;
+        optional<int> cachemax;
         Misc();
+        void Reset();
     };
 
     struct Override {
-        bool multitasking;
-        string os;
-        bool upscale;
+        optional<bool> multitasking;
+        optional<string> os;
+        optional<bool> upscale;
         Override();
+        void Reset();
     };
 
     struct Disabled {
-        bool render_at_screenres;
-        bool speechvox;
-        bool filters;
+        optional<bool> render_at_screenres;
+        optional<bool> speechvox;
+        optional<bool> filters;
         Disabled();
+        void Reset();
     };
 
 
@@ -84,6 +92,7 @@ public:
     Override override = Override();
     Disabled disabled = Disabled();
 
+    void Reset();
     void LoadFromIni(const string& filename_with_path);
     string ToIniString();
     void WriteToFile(const string& filename_with_path);

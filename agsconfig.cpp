@@ -161,7 +161,7 @@ int main(int, char**)
         ImGui::PopStyleVar();
 
 
-        if(ImGui::BeginCombo("driver",agsdata.graphics.driver.c_str())){
+        if(ImGui::BeginCombo("driver",agsdata.graphics.driver.value().c_str() )){
 
 
             ImGui::EndCombo();
