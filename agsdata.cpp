@@ -2,6 +2,7 @@
 // Created by erico on 18/01/2020.
 //
 
+#include <fstream>
 #include "agsdata.h"
 #include "inipp.h"
 
@@ -119,4 +120,10 @@ string AgsData::ToIniString() {
     ini.generate(iniStream);
     ini_string = iniStream.str();
     return ini_string;
+}
+
+void AgsData::WriteToFile(const string& filename_with_path) {
+    ofstream output_ini_file(filename_with_path);
+    output_ini_file << ToIniString();
+    output_ini_file.close();
 }

@@ -124,9 +124,6 @@ int main(int, char**)
     ini.sections["config-path"]["default"];
 
     AgsData agsdata;
-    std::ofstream output_ini_file("output.txt");
-    output_ini_file << agsdata.ToIniString();
-    output_ini_file.close();
 
         // Main loop
     bool done = false;

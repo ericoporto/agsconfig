@@ -83,6 +83,7 @@ class AgsData {
 
 public:
     string ToIniString();
+    void WriteToFile(const string& filename_with_path);
 };
 
 
