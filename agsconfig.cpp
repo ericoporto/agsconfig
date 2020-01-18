@@ -16,6 +16,125 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
+#include "inipp.h"
+#include "process.hpp"
+
+enum MouseControlWhen
+{
+    kMouseCtrl_Never,       // never control mouse (track system mouse position)
+    kMouseCtrl_Fullscreen,  // control mouse in fullscreen only
+    kMouseCtrl_Always,      // always control mouse (fullscreen and windowed)
+    kNumMouseCtrlOptions
+};
+
+// Mouse speed definition, specifies how the speed setting is applied to the mouse movement
+enum MouseSpeedDef
+{
+    kMouseSpeed_Absolute,       // apply speed multiplier directly
+    kMouseSpeed_CurrentDisplay, // keep speed/resolution relation based on current system display mode
+    kNumMouseSpeedDefs
+};
+
+// Filter configuration
+struct GfxFilterSetup
+{
+    std::string ID;          // internal filter ID
+    std::string UserRequest; // filter name, requested by user
+};
+
+enum FrameScaleDefinition
+{
+    kFrame_IntScale,        // explicit integer scaling x/y factors
+    kFrame_MaxRound,        // calculate max round uniform scaling factor
+    kFrame_MaxStretch,      // resize to maximal possible inside the display box
+    kFrame_MaxProportional, // same as stretch, but keep game's aspect ratio
+    kNumFrameScaleDef
+};
+
+// Game frame configuration
+struct GameFrameSetup
+{
+    FrameScaleDefinition ScaleDef;    // a method used to determine game frame scaling
+    int                  ScaleFactor; // explicit scale factor
+
+};
+
+enum ScreenSizeDefinition
+{
+    kScreenDef_Explicit,        // define by width & height
+    kScreenDef_ByGameScaling,   // define by game scale factor
+    kScreenDef_MaxDisplay,      // set to maximal supported (desktop/device screen size)
+    kNumScreenDef
+};
+
+// Configuration that is used to determine the size of the screen
+struct ScreenSizeSetup
+{
+    ScreenSizeDefinition SizeDef;       // a method used to determine screen size
+    int32_t Width;
+    int32_t Height;
+    int32_t ColorDepth;
+    bool                 MatchDeviceRatio; // whether to choose resolution matching device aspect ratio
+
+};
+
+// Display mode configuration
+struct DisplayModeSetup
+{
+    ScreenSizeSetup      ScreenSize;
+
+    int                  RefreshRate;   // gfx mode refresh rate
+    bool                 VSync;         // vertical sync
+    bool                 Windowed;      // is mode windowed
+};
+
+// Full graphics configuration
+struct ScreenSetup
+{
+    std::string               DriverID;      // graphics driver ID
+    DisplayModeSetup     DisplayMode;   // definition of the initial display mode
+
+    // Definitions for the fullscreen and windowed scaling methods.
+    // When the initial display mode is set, corresponding scaling method from this pair is used.
+    // The second method is meant to be saved and used if display mode is switched at runtime.
+    GameFrameSetup       FsGameFrame;   // how the game frame should be scaled/positioned in fullscreen mode
+    GameFrameSetup       WinGameFrame;  // how the game frame should be scaled/positioned in windowed mode
+
+    GfxFilterSetup       Filter;        // graphics filter definition
+};
+
+struct GameSetup {
+    int digicard;
+    int midicard;
+    int mod_player;
+    int textheight; // text height used on the certain built-in GUI
+    bool  no_speech_pack;
+    bool  enable_antialiasing;
+    bool  disable_exception_handling;
+    std::string data_files_dir;
+    std::string main_data_filename;
+    std::string main_data_filepath;
+    std::string install_dir; // optional custom install dir path
+    std::string install_audio_dir; // optional custom install audio dir path
+    std::string install_voice_dir; // optional custom install voice-over dir path
+    std::string user_data_dir; // directory to write savedgames and user files to
+    std::string shared_data_dir; // directory to write shared game files to
+    std::string translation;
+    bool  mouse_auto_lock;
+    int   override_script_os;
+    char  override_multitasking;
+    bool  override_upscale;
+    float mouse_speed;
+    MouseControlWhen mouse_ctrl_when;
+    bool  mouse_ctrl_enabled;
+    MouseSpeedDef mouse_speed_def;
+    bool  RenderAtScreenRes; // render sprites at screen resolution, as opposed to native one
+    int   Supersampling;
+
+    ScreenSetup Screen;
+
+
+};
 
 // Main code
 int main(int, char**)
@@ -36,7 +155,24 @@ int main(int, char**)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+
+    // Query default monitor resolution
+    float ddpi, hdpi, vdpi;
+    if (SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi) != 0) {
+        fprintf(stderr, "Failed to obtain DPI information for display 0: %s\n", SDL_GetError());
+        exit(1);
+    }
+    float dpi_scaling = ddpi / 72.f;
+    SDL_Rect display_bounds;
+    if (SDL_GetDisplayUsableBounds(0, &display_bounds) != 0) {
+        fprintf(stderr, "Failed to obtain bounds of display 0: %s\n", SDL_GetError());
+        exit(1);
+    }
+    int win_w = display_bounds.w * 7 / 8;
+    int win_h = display_bounds.h * 7 / 8;
+
+
+    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, window_flags);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
     SDL_GL_SetSwapInterval(1); // Enable vsync
@@ -44,6 +180,11 @@ int main(int, char**)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+
+    ImGui::GetStyle().ScaleAllSizes(dpi_scaling);
+    ImGui::GetIO().FontGlobalScale = dpi_scaling;
+    ImGui::GetIO().DisplayFramebufferScale = {dpi_scaling, dpi_scaling};
+
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -55,6 +196,9 @@ int main(int, char**)
     // Setup Platform/Renderer bindings
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL2_Init();
+
+
+   // ImGuiStyle::ScaleAllSizes(2.0f);
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -72,11 +216,26 @@ int main(int, char**)
     //IM_ASSERT(font != NULL);
 
     // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
+    ImGuiStyle& style = ImGui::GetStyle();
 
-    // Main loop
+    std::shared_ptr<std::string> output;
+    output = std::make_shared<std::string>();
+
+    std::string agsexecutable = "./agsimgui_demo";
+    std::string cmd_get_ags_config = agsexecutable + " --tell-all";
+
+    TinyProcessLib::Process process(cmd_get_ags_config, "", [output](const char *bytes, size_t n) {
+        *output += std::string(bytes, n);
+    });
+
+    inipp::Ini<char> ini;
+    std::stringstream iniStream(*output);
+
+    ini.parse(iniStream);
+    ini.sections["config-path"]["default"];
+
+        // Main loop
     bool done = false;
     while (!done)
     {
@@ -98,42 +257,34 @@ int main(int, char**)
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
+        int width, height;
+        SDL_GetWindowSize(window, &width, &height);
+        ImGui::SetNextWindowPos(ImVec2(.0f, .0f), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(width+2, height+2), ImGuiCond_Always);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        static float f = 0.0f;
+        static int counter = 0;
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-        {
-            static float f = 0.0f;
-            static int counter = 0;
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
+        ImGui::Begin("Hello, world!",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
+        ImGui::PopStyleVar();
 
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
+        ImGui::Text(output->c_str());
 
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
+        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            counter++;
+        ImGui::SameLine();
+        ImGui::Text("counter = %d", counter);
+
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::End();
 
         // Rendering
         ImGui::Render();

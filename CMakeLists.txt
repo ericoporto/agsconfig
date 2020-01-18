@@ -37,6 +37,7 @@ add_executable (AGSCONFIG
 
 find_package(OpenGL)
 include(FindLocalSDL2)
+add_subdirectory(libs/tiny-process-library EXCLUDE_FROM_ALL)
 
 if(LINUX)
     target_link_libraries(AGSCONFIG dl GL)
@@ -53,6 +54,9 @@ target_include_directories(AGSCONFIG PRIVATE libs/inipp/inipp)
 target_include_directories(AGSCONFIG PRIVATE libs/imgui)
 target_include_directories(AGSCONFIG PRIVATE libs/imgui/examples)
 target_include_directories(AGSCONFIG PRIVATE libs/SDL2-2.0.10/include)
+target_include_directories(AGSCONFIG PRIVATE libs/tiny-process-library)
+
 target_link_libraries(AGSCONFIG SDL2)
+target_link_libraries(AGSCONFIG tiny-process-library)
 
 set_target_properties(AGSCONFIG PROPERTIES OUTPUT_NAME "agsconfig")
