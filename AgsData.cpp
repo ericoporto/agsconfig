@@ -10,19 +10,7 @@
 using namespace std;
 
 AgsData::Graphics::Graphics() {
-    driver = "Software";
-    windowed = false;
-    screen_def = "scaling";
-    screen_width = 0;
-    screen_height = 0;
-    match_device_ratio = true;
-    game_scale_fs = "proportional";
-    game_scale_win = "proportional";
-    filter = "none";
-    refresh = 60;
-    render_at_screenres = false;
-    supersampling = 1;
-    vsync = true;
+    Reset();
 }
 
 void AgsData::Graphics::Reset() {
@@ -41,11 +29,24 @@ void AgsData::Graphics::Reset() {
     vsync.reset();
 }
 
+void AgsData::Graphics::SetSaneInitialValue() {
+    driver = "Software";
+    windowed = false;
+    screen_def = "scaling";
+    screen_width = 0;
+    screen_height = 0;
+    match_device_ratio = true;
+    game_scale_fs = "proportional";
+    game_scale_win = "proportional";
+    filter = "none";
+    refresh = 60;
+    render_at_screenres = false;
+    supersampling = 1;
+    vsync = true;
+}
+
 AgsData::Sound::Sound() {
-    digiid = "";
-    midiid = "";
-    usespeech = true;
-    threaded = true;
+    Reset();
 }
 
 void AgsData::Sound::Reset() {
@@ -55,12 +56,15 @@ void AgsData::Sound::Reset() {
     threaded.reset();
 }
 
+void AgsData::Sound::SetSaneInitialValue() {
+    digiid = "";
+    midiid = "";
+    usespeech = true;
+    threaded = true;
+}
+
 AgsData::Mouse::Mouse() {
-    auto_lock = false;
-    control_when = "never";
-    control_enabled = false;
-    speed_def = "absolute";
-    speed = 1.0f;
+    Reset();
 }
 
 void AgsData::Mouse::Reset() {
@@ -71,22 +75,28 @@ void AgsData::Mouse::Reset() {
     speed.reset();
 }
 
+void AgsData::Mouse::SetSaneInitialValue() {
+    auto_lock = false;
+    control_when = "never";
+    control_enabled = false;
+    speed_def = "absolute";
+    speed = 1.0f;
+}
+
 AgsData::Language::Language() {
-    translation = "";
+    Reset();
 }
 
 void AgsData::Language::Reset() {
     translation.reset();
 }
 
+void AgsData::Language::SetSaneInitialValue() {
+    translation = "";
+}
+
 AgsData::Misc::Misc() {
-    log = false;
-    datafile = "";
-    datadir = "";
-    user_data_dir = "";
-    shared_data_dir = "";
-    antialias = false;
-    cachemax = 131072;
+    Reset();
 }
 
 void AgsData::Misc::Reset() {
@@ -99,10 +109,18 @@ void AgsData::Misc::Reset() {
     cachemax.reset();
 }
 
+void AgsData::Misc::SetSaneInitialValue() {
+    log = false;
+    datafile = "";
+    datadir = "";
+    user_data_dir = "";
+    shared_data_dir = "";
+    antialias = false;
+    cachemax = 131072;
+}
+
 AgsData::Override::Override() {
-    multitasking = false;
-    os = "";
-    upscale = false;
+    Reset();
 }
 
 void AgsData::Override::Reset() {
@@ -111,16 +129,26 @@ void AgsData::Override::Reset() {
     upscale.reset();
 }
 
+void AgsData::Override::SetSaneInitialValue() {
+    multitasking = false;
+    os = "";
+    upscale = false;
+}
+
 AgsData::Disabled::Disabled() {
-    render_at_screenres = false;
-    speechvox = false;
-    filters = false;
+    Reset();
 }
 
 void AgsData::Disabled::Reset() {
     render_at_screenres.reset();
     speechvox.reset();
     filters.reset();
+}
+
+void AgsData::Disabled::SetSaneInitialValue() {
+    render_at_screenres = false;
+    speechvox = false;
+    filters = false;
 }
 
 string AgsData::ToIniString() {
@@ -284,6 +312,16 @@ void AgsData::Reset() {
     misc.Reset();
     override.Reset();
     disabled.Reset();
+}
+
+void AgsData::SetSaneInitialValue() {
+    graphics.SetSaneInitialValue();
+    sound.SetSaneInitialValue();
+    mouse.SetSaneInitialValue();
+    language.SetSaneInitialValue();
+    misc.SetSaneInitialValue();
+    override.SetSaneInitialValue();
+    disabled.SetSaneInitialValue();
 }
 
 void AgsData::MergeIn(AgsData data) {

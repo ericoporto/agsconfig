@@ -124,6 +124,7 @@ int main(int, char**)
     agsData_current.MergeIn(agsData_global);
 
     AgsData agsData = AgsData();
+    agsData.SetSaneInitialValue();
 
         // Main loop
     bool done = false;

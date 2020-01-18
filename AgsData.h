@@ -26,6 +26,7 @@ class AgsData {
         optional<bool> vsync;
         Graphics();
         void Reset();
+        void SetSaneInitialValue();
     };
 
     struct Sound {
@@ -35,6 +36,7 @@ class AgsData {
         optional<bool> threaded;
         Sound();
         void Reset();
+        void SetSaneInitialValue();
     };
 
     struct Mouse {
@@ -45,12 +47,14 @@ class AgsData {
         optional<float> speed;
         Mouse();
         void Reset();
+        void SetSaneInitialValue();
     };
 
     struct Language {
         optional<string> translation;
         Language();
         void Reset();
+        void SetSaneInitialValue();
     };
 
     struct Misc {
@@ -63,6 +67,7 @@ class AgsData {
         optional<int> cachemax;
         Misc();
         void Reset();
+        void SetSaneInitialValue();
     };
 
     struct Override {
@@ -71,6 +76,7 @@ class AgsData {
         optional<bool> upscale;
         Override();
         void Reset();
+        void SetSaneInitialValue();
     };
 
     struct Disabled {
@@ -79,6 +85,7 @@ class AgsData {
         optional<bool> filters;
         Disabled();
         void Reset();
+        void SetSaneInitialValue();
     };
 
 
@@ -93,6 +100,7 @@ public:
     Disabled disabled = Disabled();
 
     void Reset();
+    void SetSaneInitialValue();
     void LoadFromIni(const string& filename_with_path);
     string ToIniString();
     void WriteToFile(const string& filename_with_path);
