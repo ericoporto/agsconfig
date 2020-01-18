@@ -61,7 +61,7 @@ int main(int, char**)
 
 
     AgsTold agsTold;
-    agsTold.InitFromTell("agsimgui_demo");
+    agsTold.InitFromTell("agsimgui_demo"); //TODO: do not hardcode this!!!!!!!!!
 
     AgsData agsData_default;
     AgsData agsData_global;
