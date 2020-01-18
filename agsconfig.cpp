@@ -157,11 +157,17 @@ int main(int, char**)
 
 
 
-        ImGui::Begin("Hello, world!",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
+        ImGui::Begin("AGS Config",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
         ImGui::PopStyleVar();
 
 
-        ImGui::Text(output->c_str());
+        if(ImGui::BeginCombo("driver",agsdata.graphics.driver.c_str())){
+
+
+            ImGui::EndCombo();
+        }
+
+
 
         ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 

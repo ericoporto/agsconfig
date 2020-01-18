@@ -73,6 +73,9 @@ class AgsData {
         Disabled();
     };
 
+
+public:
+
     Graphics graphics = Graphics();
     Sound sound = Sound();
     Mouse mouse = Mouse();
@@ -81,7 +84,6 @@ class AgsData {
     Override override = Override();
     Disabled disabled = Disabled();
 
-public:
     void LoadFromIni(const string& filename_with_path);
     string ToIniString();
     void WriteToFile(const string& filename_with_path);
