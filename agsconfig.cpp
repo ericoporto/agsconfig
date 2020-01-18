@@ -80,6 +80,8 @@ int main(int, char**)
     agsData.SetSaneInitialValue();
 
     vector<string> scalingOptions = {"max_round", "stretch", "proportional", "1", "2", "3" };
+    vector<string> soundOptionsDigiid = { "auto", "none", "ALSA", "ARTS", "ESSD", "JACK", "OSSD", "SGIA", "SDL" };
+    vector<string> soundOptionsMidiid = { "auto","none","AMID", "OSSM"};
 
 
     SDL_Window* window = SDL_CreateWindow(agsTold.config_AT_misc.titletext.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, window_flags);
@@ -173,7 +175,7 @@ int main(int, char**)
                 it != agsTold.graphicdriver.drivers.end();
                 it++) {
 
-                ImGui::Selectable(it->c_str());
+                if(ImGui::Selectable(it->c_str())) agsData.graphics.driver = it->c_str();
             }
 
             ImGui::EndCombo();
@@ -188,7 +190,7 @@ int main(int, char**)
                 it != scalingOptions.end();
                 it++) {
 
-                ImGui::Selectable(it->c_str());
+                if(ImGui::Selectable(it->c_str())) agsData.graphics.game_scale_fs = it->c_str();
             }
 
             ImGui::EndCombo();
@@ -201,7 +203,7 @@ int main(int, char**)
                 it != scalingOptions.end();
                 it++) {
 
-                ImGui::Selectable(it->c_str());
+                if(ImGui::Selectable(it->c_str())) agsData.graphics.game_scale_win = it->c_str();
             }
 
             ImGui::EndCombo();
@@ -213,6 +215,33 @@ int main(int, char**)
 
         ImGui::Separator();
         ImGui::Text("Sound");               // Display some text (you can use a format strings too)
+
+        ImGui::Text("Sound Driver:"); ImGui::SameLine();
+        if(ImGui::BeginCombo("##Sound Driver",agsData.sound.digiid.value().c_str() )){
+            vector<string>::iterator it;
+            for(it = soundOptionsDigiid.begin();
+                it != soundOptionsDigiid.end();
+                it++) {
+
+                if(ImGui::Selectable(it->c_str())) agsData.sound.digiid = it->c_str();;
+            }
+
+            ImGui::EndCombo();
+        }
+
+        ImGui::Text("MIDI Driver:"); ImGui::SameLine();
+        if(ImGui::BeginCombo("##MIDI Driver",agsData.sound.midiid.value().c_str() )){
+            vector<string>::iterator it;
+            for(it = soundOptionsMidiid.begin();
+                it != soundOptionsMidiid.end();
+                it++) {
+
+                if(ImGui::Selectable(it->c_str())) agsData.sound.midiid = it->c_str();
+            }
+
+            ImGui::EndCombo();
+        }
+
         ImGui::Checkbox("Threaded Audio",&(agsData.sound.threaded.value()));
         ImGui::Checkbox("Use speech pack",&(agsData.sound.usespeech.value()));
 
