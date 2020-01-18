@@ -23,6 +23,8 @@ endif ()
 
 add_executable (AGSCONFIG
         agsconfig.cpp
+        agsdata.cpp
+        agsdata.h
         libs/inipp/inipp/inipp.h
         libs/imgui/imgui.h
         libs/imgui/imgui.cpp

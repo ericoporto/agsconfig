@@ -18,123 +18,11 @@
 #include <SDL_opengl.h>
 #include "inipp.h"
 #include "process.hpp"
+#include "agsdata.h"
+#include <fstream>
+#include <string>
+#include <iostream>
 
-enum MouseControlWhen
-{
-    kMouseCtrl_Never,       // never control mouse (track system mouse position)
-    kMouseCtrl_Fullscreen,  // control mouse in fullscreen only
-    kMouseCtrl_Always,      // always control mouse (fullscreen and windowed)
-    kNumMouseCtrlOptions
-};
-
-// Mouse speed definition, specifies how the speed setting is applied to the mouse movement
-enum MouseSpeedDef
-{
-    kMouseSpeed_Absolute,       // apply speed multiplier directly
-    kMouseSpeed_CurrentDisplay, // keep speed/resolution relation based on current system display mode
-    kNumMouseSpeedDefs
-};
-
-// Filter configuration
-struct GfxFilterSetup
-{
-    std::string ID;          // internal filter ID
-    std::string UserRequest; // filter name, requested by user
-};
-
-enum FrameScaleDefinition
-{
-    kFrame_IntScale,        // explicit integer scaling x/y factors
-    kFrame_MaxRound,        // calculate max round uniform scaling factor
-    kFrame_MaxStretch,      // resize to maximal possible inside the display box
-    kFrame_MaxProportional, // same as stretch, but keep game's aspect ratio
-    kNumFrameScaleDef
-};
-
-// Game frame configuration
-struct GameFrameSetup
-{
-    FrameScaleDefinition ScaleDef;    // a method used to determine game frame scaling
-    int                  ScaleFactor; // explicit scale factor
-
-};
-
-enum ScreenSizeDefinition
-{
-    kScreenDef_Explicit,        // define by width & height
-    kScreenDef_ByGameScaling,   // define by game scale factor
-    kScreenDef_MaxDisplay,      // set to maximal supported (desktop/device screen size)
-    kNumScreenDef
-};
-
-// Configuration that is used to determine the size of the screen
-struct ScreenSizeSetup
-{
-    ScreenSizeDefinition SizeDef;       // a method used to determine screen size
-    int32_t Width;
-    int32_t Height;
-    int32_t ColorDepth;
-    bool                 MatchDeviceRatio; // whether to choose resolution matching device aspect ratio
-
-};
-
-// Display mode configuration
-struct DisplayModeSetup
-{
-    ScreenSizeSetup      ScreenSize;
-
-    int                  RefreshRate;   // gfx mode refresh rate
-    bool                 VSync;         // vertical sync
-    bool                 Windowed;      // is mode windowed
-};
-
-// Full graphics configuration
-struct ScreenSetup
-{
-    std::string               DriverID;      // graphics driver ID
-    DisplayModeSetup     DisplayMode;   // definition of the initial display mode
-
-    // Definitions for the fullscreen and windowed scaling methods.
-    // When the initial display mode is set, corresponding scaling method from this pair is used.
-    // The second method is meant to be saved and used if display mode is switched at runtime.
-    GameFrameSetup       FsGameFrame;   // how the game frame should be scaled/positioned in fullscreen mode
-    GameFrameSetup       WinGameFrame;  // how the game frame should be scaled/positioned in windowed mode
-
-    GfxFilterSetup       Filter;        // graphics filter definition
-};
-
-struct GameSetup {
-    int digicard;
-    int midicard;
-    int mod_player;
-    int textheight; // text height used on the certain built-in GUI
-    bool  no_speech_pack;
-    bool  enable_antialiasing;
-    bool  disable_exception_handling;
-    std::string data_files_dir;
-    std::string main_data_filename;
-    std::string main_data_filepath;
-    std::string install_dir; // optional custom install dir path
-    std::string install_audio_dir; // optional custom install audio dir path
-    std::string install_voice_dir; // optional custom install voice-over dir path
-    std::string user_data_dir; // directory to write savedgames and user files to
-    std::string shared_data_dir; // directory to write shared game files to
-    std::string translation;
-    bool  mouse_auto_lock;
-    int   override_script_os;
-    char  override_multitasking;
-    bool  override_upscale;
-    float mouse_speed;
-    MouseControlWhen mouse_ctrl_when;
-    bool  mouse_ctrl_enabled;
-    MouseSpeedDef mouse_speed_def;
-    bool  RenderAtScreenRes; // render sprites at screen resolution, as opposed to native one
-    int   Supersampling;
-
-    ScreenSetup Screen;
-
-
-};
 
 // Main code
 int main(int, char**)
@@ -234,6 +122,11 @@ int main(int, char**)
 
     ini.parse(iniStream);
     ini.sections["config-path"]["default"];
+
+    AgsData agsdata;
+    std::ofstream output_ini_file("output.txt");
+    output_ini_file << agsdata.ToIniString();
+    output_ini_file.close();
 
         // Main loop
     bool done = false;
