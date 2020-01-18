@@ -22,6 +22,8 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include "DroidSans.h"
+#include "AgsConfigUtilStr.h"
 
 
 // Main code
@@ -83,6 +85,8 @@ int main(int, char**)
     vector<string> scalingOptions = {"max_round", "stretch", "proportional", "1", "2", "3" };
     vector<string> soundOptionsDigiid = { "auto", "none", "ALSA", "ARTS", "ESSD", "JACK", "OSSD", "SGIA", "SDL" };
     vector<string> soundOptionsMidiid = { "auto","none","AMID", "OSSM"};
+    vector<string> spriteCacheOptions = { "16 MB","32 MB","64 MB", "128 MB (default)","256 MB","512 MB"};
+    vector<int> spriteCacheOptions_value = { 16*1024,32*1024,64*1024, 128*1024,256*1024,512*1024};
 
 
     SDL_Window* window = SDL_CreateWindow(agsTold.config_AT_misc.titletext.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, window_flags);
@@ -102,8 +106,10 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
+    io.Fonts->AddFontFromMemoryCompressedTTF(DroidSans_compressed_data,DroidSans_compressed_size,dpi_scaling * 14.0f);
+
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    ImGui::StyleColorsLight();
     //ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer bindings
@@ -111,7 +117,7 @@ int main(int, char**)
     ImGui_ImplOpenGL2_Init();
 
 
-   // ImGuiStyle::ScaleAllSizes(2.0f);
+    //ImGuiStyle::ScaleAllSizes(0.5f);
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -127,6 +133,7 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
+
 
     // Our state
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
@@ -169,6 +176,7 @@ int main(int, char**)
         ImGui::Begin("AGS Config",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
         ImGui::PopStyleVar();
 
+        ImGui::BeginGroup();
         ImGui::Text("Driver:"); ImGui::SameLine();
         if(ImGui::BeginCombo("##driver",agsData.graphics.driver.value().c_str() )){
             vector<string>::iterator it;
@@ -210,9 +218,24 @@ int main(int, char**)
             ImGui::EndCombo();
         }
 
-        ImGui::Checkbox("VSync",&(agsData.graphics.vsync.value()));
+        ImGui::Text("Sprite Cache Maximum Size:"); ImGui::SameLine();
+        if(ImGui::BeginCombo("##Sprite Cache", IntToStr(agsData.misc.cachemax.value()).c_str() ) ){
+            vector<string>::iterator it;
+            vector<int>::iterator it2;
+            for(int i=0;
+                i<spriteCacheOptions.size();
+                i++) {
+
+                if(ImGui::Selectable(spriteCacheOptions[i].c_str())) agsData.misc.cachemax = spriteCacheOptions_value[i];
+            }
+
+            ImGui::EndCombo();
+        }
+
+        ImGui::Checkbox("Vertical Sync",&(agsData.graphics.vsync.value()));
         ImGui::Checkbox("Render sprites at screen resolution",&(agsData.graphics.render_at_screenres.value()));
         ImGui::Checkbox("Match Device Ratio",&(agsData.graphics.match_device_ratio.value()));
+        ImGui::EndGroup();
 
         ImGui::Separator();
         ImGui::Text("Sound");               // Display some text (you can use a format strings too)
@@ -249,8 +272,14 @@ int main(int, char**)
 
         ImGui::Separator();
         ImGui::Text("Mouse");
+        ImGui::Separator();
 
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::Button("Save");
+        ImGui::SameLine();
+        ImGui::Button("Save and Run");
+        ImGui::SameLine();
+        ImGui::Button("Cancel");
+
         ImGui::End();
 
         // Rendering

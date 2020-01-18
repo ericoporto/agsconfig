@@ -24,6 +24,7 @@ else()
 endif ()
 
 add_executable (AGSCONFIG
+        DroidSans.h
         agsconfig.cpp
         AgsConfigUtilStr.h
         AgsConfigUtilStr.cpp
