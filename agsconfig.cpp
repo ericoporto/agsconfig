@@ -60,7 +60,29 @@ int main(int, char**)
     int win_h = display_bounds.h * 7 / 8;
 
 
-    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+OpenGL example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, window_flags);
+    AgsTold agsTold;
+    agsTold.InitFromTell("agsimgui_demo");
+
+    AgsData agsData_default;
+    AgsData agsData_global;
+    AgsData agsData_user;
+    agsData_default.LoadFromIni(agsTold.configPath._default);
+    agsData_global.LoadFromIni(agsTold.configPath.global);
+    agsData_user.LoadFromIni(agsTold.configPath.user);
+
+    AgsData agsData_current;
+    agsData_current.Reset();
+    agsData_current.MergeIn(agsData_default);
+    agsData_current.MergeIn(agsData_user);
+    agsData_current.MergeIn(agsData_global);
+
+    AgsData agsData = AgsData();
+    agsData.SetSaneInitialValue();
+
+    vector<string> scalingOptions = {"max_round", "stretch", "proportional", "1", "2", "3" };
+
+
+    SDL_Window* window = SDL_CreateWindow(agsTold.config_AT_misc.titletext.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, window_flags);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
     SDL_GL_SetSwapInterval(1); // Enable vsync
@@ -107,24 +129,7 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
     ImGuiStyle& style = ImGui::GetStyle();
 
-    AgsTold agsTold;
-    agsTold.InitFromTell("agsimgui_demo");
 
-    AgsData agsData_default;
-    AgsData agsData_global;
-    AgsData agsData_user;
-    agsData_default.LoadFromIni(agsTold.configPath._default);
-    agsData_global.LoadFromIni(agsTold.configPath.global);
-    agsData_user.LoadFromIni(agsTold.configPath.user);
-
-    AgsData agsData_current;
-    agsData_current.Reset();
-    agsData_current.MergeIn(agsData_default);
-    agsData_current.MergeIn(agsData_user);
-    agsData_current.MergeIn(agsData_global);
-
-    AgsData agsData = AgsData();
-    agsData.SetSaneInitialValue();
 
         // Main loop
     bool done = false;
@@ -161,8 +166,8 @@ int main(int, char**)
         ImGui::Begin("AGS Config",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
         ImGui::PopStyleVar();
 
-
-        if(ImGui::BeginCombo("driver",agsData.graphics.driver.value().c_str() )){
+        ImGui::Text("Driver:"); ImGui::SameLine();
+        if(ImGui::BeginCombo("##driver",agsData.graphics.driver.value().c_str() )){
             vector<string>::iterator it;
             for(it = agsTold.graphicdriver.drivers.begin();
                 it != agsTold.graphicdriver.drivers.end();
@@ -171,20 +176,49 @@ int main(int, char**)
                 ImGui::Selectable(it->c_str());
             }
 
-                ImGui::EndCombo();
+            ImGui::EndCombo();
         }
 
+        ImGui::Checkbox("Start in windowed mode",&(agsData.graphics.windowed.value()));
+
+        ImGui::Text("Fullscreen scale:"); ImGui::SameLine();
+        if(ImGui::BeginCombo("##Fullscreen scale",agsData.graphics.game_scale_fs.value().c_str() )){
+            vector<string>::iterator it;
+            for(it = scalingOptions.begin();
+                it != scalingOptions.end();
+                it++) {
+
+                ImGui::Selectable(it->c_str());
+            }
+
+            ImGui::EndCombo();
+        }
+
+        ImGui::Text("Windowed scale:"); ImGui::SameLine();
+        if(ImGui::BeginCombo("##Windowed scale",agsData.graphics.game_scale_win.value().c_str() )){
+            vector<string>::iterator it;
+            for(it = scalingOptions.begin();
+                it != scalingOptions.end();
+                it++) {
+
+                ImGui::Selectable(it->c_str());
+            }
+
+            ImGui::EndCombo();
+        }
+
+        ImGui::Checkbox("VSync",&(agsData.graphics.vsync.value()));
+        ImGui::Checkbox("Render sprites at screen resolution",&(agsData.graphics.render_at_screenres.value()));
+        ImGui::Checkbox("Match Device Ratio",&(agsData.graphics.match_device_ratio.value()));
+
+        ImGui::Separator();
+        ImGui::Text("Sound");               // Display some text (you can use a format strings too)
+        ImGui::Checkbox("Threaded Audio",&(agsData.sound.threaded.value()));
+        ImGui::Checkbox("Use speech pack",&(agsData.sound.usespeech.value()));
 
 
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
+        ImGui::Separator();
+        ImGui::Text("Mouse");
 
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
