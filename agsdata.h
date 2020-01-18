@@ -82,6 +82,7 @@ class AgsData {
     Disabled disabled = Disabled();
 
 public:
+    void LoadFromIni(const string& filename_with_path);
     string ToIniString();
     void WriteToFile(const string& filename_with_path);
 };
