@@ -42,13 +42,18 @@ add_executable (AGSCONFIG
         libs/imgui/examples/imgui_impl_opengl2.h
         libs/imgui/examples/imgui_impl_opengl2.cpp )
 
+if(WIN32)
+    add_executable (AGSCONFIG
+            libs/dirent/include/dirent.h)
+    target_include_directories(AGSCONFIG PRIVATE libs/dirent/include)
+endif()
 
 find_package(OpenGL)
 include(FindLocalSDL2)
 add_subdirectory(libs/tiny-process-library EXCLUDE_FROM_ALL)
 
 if(LINUX)
-    target_link_libraries(AGSCONFIG dl GL)
+    target_link_libraries(AGSCONFIG PRIVATE dl GL)
 elseif(MACOS)
     target_link_libraries(AGSCONFIG PRIVATE "-framework Cocoa")
     target_link_libraries(AGSCONFIG PRIVATE "-framework OpenGL")
@@ -64,7 +69,7 @@ target_include_directories(AGSCONFIG PRIVATE libs/imgui/examples)
 target_include_directories(AGSCONFIG PRIVATE libs/SDL2-2.0.10/include)
 target_include_directories(AGSCONFIG PRIVATE libs/tiny-process-library)
 
-target_link_libraries(AGSCONFIG SDL2)
-target_link_libraries(AGSCONFIG tiny-process-library)
+target_link_libraries(AGSCONFIG PUBLIC SDL2)
+target_link_libraries(AGSCONFIG PRIVATE tiny-process-library)
 
 set_target_properties(AGSCONFIG PROPERTIES OUTPUT_NAME "agsconfig")

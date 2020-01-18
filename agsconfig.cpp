@@ -108,7 +108,7 @@ int main(int, char**)
     ImGuiStyle& style = ImGui::GetStyle();
 
     AgsTold agsTold;
-    agsTold.InitFromTell("./agsimgui_demo");
+    agsTold.InitFromTell("agsimgui_demo");
 
     AgsData agsData_default;
     AgsData agsData_global;
@@ -163,9 +163,15 @@ int main(int, char**)
 
 
         if(ImGui::BeginCombo("driver",agsData.graphics.driver.value().c_str() )){
+            vector<string>::iterator it;
+            for(it = agsTold.graphicdriver.drivers.begin();
+                it != agsTold.graphicdriver.drivers.end();
+                it++) {
 
+                ImGui::Selectable(it->c_str());
+            }
 
-            ImGui::EndCombo();
+                ImGui::EndCombo();
         }
 
 
