@@ -101,12 +101,11 @@ int main(int, char**)
     ImGui::GetStyle().ScaleAllSizes(dpi_scaling);
     ImGui::GetIO().FontGlobalScale = dpi_scaling;
     ImGui::GetIO().DisplayFramebufferScale = {dpi_scaling, dpi_scaling};
+    ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(DroidSans_compressed_data,DroidSans_compressed_size,dpi_scaling * 14.0f);
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-    io.Fonts->AddFontFromMemoryCompressedTTF(DroidSans_compressed_data,DroidSans_compressed_size,dpi_scaling * 14.0f);
 
     // Setup Dear ImGui style
     ImGui::StyleColorsLight();
@@ -117,6 +116,7 @@ int main(int, char**)
     ImGui_ImplOpenGL2_Init();
 
     bool runTheGameBeforeQuit = false;
+    bool saveBeforeQuit = false;
     //ImGuiStyle::ScaleAllSizes(0.5f);
 
     // Load Fonts
@@ -298,10 +298,12 @@ int main(int, char**)
         ImGui::Separator();
 
         if(ImGui::Button("Save")) {
+            saveBeforeQuit = true;
             break;
         };
         ImGui::SameLine();
         if(ImGui::Button("Save and Run")) {
+            saveBeforeQuit = true;
             runTheGameBeforeQuit = true;
             break;
         }
@@ -318,6 +320,10 @@ int main(int, char**)
         //glUseProgram(0); // You may want this if using this code in an OpenGL 3+ context where shaders may be bound
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
+    }
+
+    if(saveBeforeQuit){
+        agsData.WriteToFile(agsTold.configPath.user);
     }
 
     if(runTheGameBeforeQuit){
