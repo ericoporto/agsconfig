@@ -58,7 +58,7 @@ int main(int, char**)
         fprintf(stderr, "Failed to obtain bounds of display 0: %s\n", SDL_GetError());
         exit(1);
     }
-    int win_w = display_bounds.w * 7 / 8;
+    int win_w = display_bounds.w * 6 / 8;
     int win_h = display_bounds.h * 7 / 8;
 
 
