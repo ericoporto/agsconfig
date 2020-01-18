@@ -110,18 +110,20 @@ int main(int, char**)
     AgsTold agsTold;
     agsTold.InitFromTell("./agsimgui_demo");
 
-    AgsData agsdata_default;
-    AgsData agsdata_global;
-    AgsData agsdata_user;
-    agsdata_default.LoadFromIni(agsTold.configPath._default);
-    agsdata_global.LoadFromIni(agsTold.configPath.global);
-    agsdata_user.LoadFromIni(agsTold.configPath.user);
+    AgsData agsData_default;
+    AgsData agsData_global;
+    AgsData agsData_user;
+    agsData_default.LoadFromIni(agsTold.configPath._default);
+    agsData_global.LoadFromIni(agsTold.configPath.global);
+    agsData_user.LoadFromIni(agsTold.configPath.user);
 
-    AgsData agsdata;
-    agsdata.Reset();
-    agsdata.MergeIn(agsdata_default);
-    agsdata.MergeIn(agsdata_user);
-    agsdata.MergeIn(agsdata_global);
+    AgsData agsData_current;
+    agsData_current.Reset();
+    agsData_current.MergeIn(agsData_default);
+    agsData_current.MergeIn(agsData_user);
+    agsData_current.MergeIn(agsData_global);
+
+    AgsData agsData = AgsData();
 
         // Main loop
     bool done = false;
@@ -159,7 +161,7 @@ int main(int, char**)
         ImGui::PopStyleVar();
 
 
-        if(ImGui::BeginCombo("driver",agsdata.graphics.driver.value().c_str() )){
+        if(ImGui::BeginCombo("driver",agsData.graphics.driver.value().c_str() )){
 
 
             ImGui::EndCombo();
