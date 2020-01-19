@@ -8,6 +8,7 @@
 #include "AgsConfigUtilStr.h"
 #ifdef WIN32
 #include "dirent.h"
+#include "direct.h"
 #else
 #include <unistd.h>
 #include <dirent.h>
