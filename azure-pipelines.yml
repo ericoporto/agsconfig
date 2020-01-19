@@ -12,7 +12,7 @@ trigger:
 strategy:
   matrix:
     linux:
-      imageName: 'ubuntu-16.04'
+      imageName: 'ubuntu-18.04'
     mac:
       imageName: 'macos-10.13'
     windows:
@@ -54,7 +54,7 @@ steps:
 - task: CMake@1
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
-    cmakeArgs: .. -GNinja -DCMAKE_BUILD_TYPE=Release 
+    cmakeArgs: .. -DCMAKE_BUILD_TYPE=Release 
 
 - task: CopyFiles@2
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
