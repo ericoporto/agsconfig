@@ -25,6 +25,10 @@ steps:
 # Linux
 - bash: |
     sudo apt install -y libx11-dev
+    curl -O -L https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2-Linux-x86_64.tar.gz
+    tar -C /opt -xf cmake-3.16.2-Linux-x86_64.tar.gz
+    ENV PATH="/opt/cmake-3.16.2-Linux-x86_64/bin:${PATH}"
+
     mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make
   condition: eq( variables['Agent.OS'], 'Linux' )
   displayName: 'make'
