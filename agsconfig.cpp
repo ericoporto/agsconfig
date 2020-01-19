@@ -24,7 +24,7 @@
 #include <iostream>
 #include "DroidSans.h"
 #include "AgsConfigUtilStr.h"
-
+#include "AgsConfigIniSettings.h"
 
 // Main code
 int main(int, char**)
@@ -61,9 +61,11 @@ int main(int, char**)
     int win_w = display_bounds.w * 6 / 8;
     int win_h = display_bounds.h * 7 / 8;
 
-
+    AgsConfigIniSettings agsConfigIniSettings;
+    agsConfigIniSettings.SetSaneInitialValue();
+    agsConfigIniSettings.LoadFromIni();
     AgsTold agsTold;
-    agsTold.InitFromTell("agsimgui_demo"); //TODO: do not hardcode this!!!!!!!!!
+    agsTold.InitFromTell(agsConfigIniSettings.game.executable.value());
 
     AgsData agsData_default;
     AgsData agsData_global;

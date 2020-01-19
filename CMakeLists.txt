@@ -68,7 +68,7 @@ else ()
 			libs/imgui/examples/imgui_impl_sdl.cpp
 			libs/imgui/examples/imgui_impl_sdl.h
 			libs/imgui/examples/imgui_impl_opengl2.h
-			libs/imgui/examples/imgui_impl_opengl2.cpp )
+			libs/imgui/examples/imgui_impl_opengl2.cpp AgsConfigIniSettings.cpp AgsConfigIniSettings.h)
 endif ()
 
 if(WIN32)
