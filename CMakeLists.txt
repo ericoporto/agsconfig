@@ -105,8 +105,6 @@ endif()
 
 target_include_directories(AGSCONFIG PRIVATE libs/SDL2-2.0.10/include)
 
-target_link_libraries(AGSCONFIG PUBLIC opengl32)
-
 target_include_directories(AGSCONFIG PRIVATE libs/inipp/inipp)
 target_include_directories(AGSCONFIG PRIVATE libs/imgui)
 target_include_directories(AGSCONFIG PRIVATE libs/imgui/examples)
