@@ -106,6 +106,7 @@ endif()
 target_include_directories(AGSCONFIG PRIVATE libs/SDL2-2.0.10/include)
 
 target_include_directories(AGSCONFIG PRIVATE libs/inipp/inipp)
+target_include_directories(AGSCONFIG PRIVATE libs/optional-lite/include)
 target_include_directories(AGSCONFIG PRIVATE libs/imgui)
 target_include_directories(AGSCONFIG PRIVATE libs/imgui/examples)
 target_include_directories(AGSCONFIG PRIVATE libs/tiny-process-library)

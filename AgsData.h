@@ -6,7 +6,7 @@
 #define AGSCONFIG_AGSDATA_H
 
 #include<string>
-#include<optional>
+#include"nonstd/optional.hpp"
 using namespace std;
 
 class AgsData {
