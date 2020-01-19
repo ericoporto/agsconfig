@@ -7,7 +7,8 @@
 
 #include<string>
 #include"nonstd/optional.hpp"
-using namespace std;
+using nonstd::optional;
+using std::string;
 
 class AgsData {
     struct Graphics {

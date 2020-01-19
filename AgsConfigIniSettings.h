@@ -7,7 +7,9 @@
 
 #include<string>
 #include"nonstd/optional.hpp"
-using namespace std;
+using nonstd::optional;
+using std::string;
+using std::ofstream;
 
 class AgsConfigIniSettings {
     struct Game {
