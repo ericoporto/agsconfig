@@ -63,7 +63,7 @@ steps:
 - task: CMake@1
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
-    cmakeArgs: .. -DCMAKE_BUILD_TYPE=Release --build .
+    cmakeArgs: --build .. -DCMAKE_BUILD_TYPE=Release
 
 - task: CopyFiles@2
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
