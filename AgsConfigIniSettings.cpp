@@ -17,7 +17,7 @@ void AgsConfigIniSettings::Game::Reset() {
 
 void AgsConfigIniSettings::Game::SetSaneInitialValue() {
     // we can't guess the game name
-    executable = (string) "agsimgui_demo"; //TODO: do not hardcode this!!!!!!!!!
+    executable = (string) "ags"; //TODO: do not hardcode this!!!!!!!!!
 }
 
 void AgsConfigIniSettings::Reset() {
