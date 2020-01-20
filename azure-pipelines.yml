@@ -46,7 +46,7 @@ steps:
   condition: eq( variables['Agent.OS'], 'Linux' )
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)/build/'
-    contents: 'agsconfig'
+    contents: 'agsconfig-Linux'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
 # macOS
@@ -66,7 +66,7 @@ steps:
   condition: eq( variables['Agent.OS'], 'Darwin' )
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)/build/'
-    contents: 'agsconfig'
+    contents: 'agsconfig-MacOS'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
 # Windows
