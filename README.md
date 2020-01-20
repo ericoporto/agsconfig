@@ -42,7 +42,7 @@ On Linux, you will need additionally the packages `libgl1-mesa-dev` and `mesa-co
 
 AGS Config is made by Érico Vieira Porto and provided with MIT license, see [`LICENSE`](https://github.com/ericoporto/agsconfig/blob/master/LICENSE).
 
-SDL (Simple DirectMedia Layer) is by Sam Lantinga and provided with as is with it's own license, see [`COPYING.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/SDL2-2.0.10/COPYING.txt).
+SDL (Simple DirectMedia Layer) is by Sam Lantinga and provided with it's own license, see [`COPYING.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/SDL2-2.0.10/COPYING.txt).
 
 Dear ImGui is made by Omar Cornut and provided with MIT license, see [`LICENSE.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/imgui/LICENSE.txt).
 
