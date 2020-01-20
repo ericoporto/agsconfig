@@ -4,6 +4,8 @@
 
 agsconfig tries to give similar functionality to the traditional winsetup.exe of Adventure Game Studio, but cross platform
 
+![](https://user-images.githubusercontent.com/2244442/72697367-8be01e80-3b1e-11ea-84ce-9d6fc45d3fd2.png)
+
 ## Using with your game
 
 Place `agsconfig` executable at the same location of your game entry-point (`mygame`) or binary (`mygame.exe`). 
