@@ -38,7 +38,7 @@ steps:
   displayName: 'make'
 
 - bash: |
-    mv agsconfig agsconfig-Linux
+    mv build/agsconfig build/agsconfig-Linux
   condition: eq( variables['Agent.OS'], 'Linux' )
   displayName: 'rename build'
 
@@ -58,7 +58,7 @@ steps:
   displayName: 'make'
 
 - bash: |
-    mv agsconfig agsconfig-MacOS
+    mv build/agsconfig build/agsconfig-MacOS
   condition: eq( variables['Agent.OS'], 'Darwin' )
   displayName: 'rename build'
 
@@ -80,12 +80,12 @@ steps:
   displayName: 'build agsconfig'
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
-    cmakeArgs: --build .
+    cmakeArgs: --build . --config Release
 
 - task: CopyFiles@2
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)/build/'
+    sourceFolder: '$(Build.SourcesDirectory)/build/Release/'
     contents: 'agsconfig.exe'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
