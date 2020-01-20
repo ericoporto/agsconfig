@@ -1,4 +1,7 @@
 # agsconfig
+
+[![Build Status](https://dev.azure.com/ericoporto/agsconfig/_apis/build/status/ericoporto.agsconfig?branchName=master)](https://dev.azure.com/ericoporto/agsconfig/_build/latest?definitionId=13&branchName=master)
+
 agsconfig tries to give similar functionality to the traditional winsetup.exe of Adventure Game Studio, but cross platform
 
 ## Using with your game
