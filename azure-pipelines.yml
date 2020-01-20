@@ -40,7 +40,7 @@ steps:
 - task: CopyFiles@2
   condition: eq( variables['Agent.OS'], 'Linux' )
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)/agsconfig'
+    sourceFolder: '$(Build.SourcesDirectory)/build/'
     contents: 'agsconfig'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
@@ -68,7 +68,7 @@ steps:
 - task: CopyFiles@2
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)/build/'
+    sourceFolder: '$(Build.SourcesDirectory)/../build/'
     contents: 'agsconfig.exe'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
