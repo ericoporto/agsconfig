@@ -102,5 +102,4 @@ steps:
     gitHubConnection: agsconfig
     repositoryName: ericoporto/agsconfig
     assets: |
-         $(Build.ArtifactStagingDirectory)/agsconfig.exe
          $(Build.ArtifactStagingDirectory)/agsconfig*
