@@ -61,9 +61,16 @@ steps:
 
 # Windows
 - task: CMake@1
+  displayName: 'Generate agsconfig build files via cmake'
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
-    cmakeArgs: --build .. -DCMAKE_BUILD_TYPE=Release
+    cmakeArgs: .. -DCMAKE_BUILD_TYPE=Release
+
+- task: CMake@1
+  displayName: 'build agsconfig'
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  inputs:
+    cmakeArgs: --build .
 
 - task: CopyFiles@2
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
