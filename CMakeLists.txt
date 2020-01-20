@@ -19,6 +19,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(LINUX TRUE)
 	add_definitions(-DLINUX=1)
+	# without no-pie we can't double-click run agsconfig in Nautilus
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fno-pie -no-pie")
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(MACOS TRUE)
 	add_definitions(-DMACOS=1)
@@ -26,6 +28,19 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 else ()
     message(FATAL_ERROR "Unsupported system: ${CMAKE_SYSTEM_NAME}")
 endif ()
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT ipo_supported OUTPUT ipo_not_supported_reason)
+if(ipo_supported)
+	set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE          TRUE)
+	set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO   TRUE)
+else()
+	message(STATUS "Interprocedural optimisation (IPO/LTO) not supported: <${ipo_not_supported_reason}>")
+endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 if(MSVC)
     add_compile_options(/MP)    # Build with Multiple Processes
@@ -37,6 +52,8 @@ if (WIN32)
 	add_executable (AGSCONFIG WIN32
 			DroidSans.h
 			agsconfig.cpp
+			AgsConfigIniSettings.h
+			AgsConfigIniSettings.cpp
 			AgsConfigUtilStr.h
 			AgsConfigUtilStr.cpp
 			AgsTold.cpp
@@ -57,6 +74,8 @@ else ()
 	add_executable (AGSCONFIG
 			DroidSans.h
 			agsconfig.cpp
+			AgsConfigIniSettings.h
+			AgsConfigIniSettings.cpp
 			AgsConfigUtilStr.h
 			AgsConfigUtilStr.cpp
 			AgsTold.cpp
@@ -72,13 +91,12 @@ else ()
 			libs/imgui/examples/imgui_impl_sdl.cpp
 			libs/imgui/examples/imgui_impl_sdl.h
 			libs/imgui/examples/imgui_impl_opengl2.h
-			libs/imgui/examples/imgui_impl_opengl2.cpp AgsConfigIniSettings.cpp AgsConfigIniSettings.h)
+			libs/imgui/examples/imgui_impl_opengl2.cpp )
 endif ()
 
 if(WIN32)
     target_include_directories(AGSCONFIG PRIVATE libs/dirent/include)
 endif()
-
 
 find_package(PkgConfig)
 find_package(Threads)
