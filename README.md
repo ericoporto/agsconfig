@@ -46,7 +46,7 @@ SDL (Simple DirectMedia Layer) is by Sam Lantinga and provided with as is with i
 
 Dear ImGui is made by Omar Cornut and provided with MIT license, see [`LICENSE.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/imgui/LICENSE.txt).
 
-IniPP is made by Matthias C. M. Troffaes and provided with MIT license, see [`/LICENSE.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/inipp/LICENSE.txt).
+IniPP is made by Matthias C. M. Troffaes and provided with MIT license, see [`LICENSE.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/inipp/LICENSE.txt).
 
 optional lite is distributed under the Boost Software License, see [`LICENSE.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/optional-lite/LICENSE.txt).
 
