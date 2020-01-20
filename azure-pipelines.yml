@@ -63,12 +63,12 @@ steps:
 - task: CMake@1
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
-    cmakeArgs: .. -DCMAKE_BUILD_TYPE=Release 
+    cmakeArgs: .. -DCMAKE_BUILD_TYPE=Release --build .
 
 - task: CopyFiles@2
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
   inputs:
-    sourceFolder: '$(Build.SourcesDirectory)/../build/'
+    sourceFolder: '$(Build.SourcesDirectory)/build/'
     contents: 'agsconfig.exe'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
