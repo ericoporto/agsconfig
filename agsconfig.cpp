@@ -26,6 +26,17 @@
 #include "AgsConfigUtilStr.h"
 #include "AgsConfigIniSettings.h"
 
+const char* NumberToAutoOrNone(const char * cString){
+    if(std::string(cString) == "0") return "none";
+    else if(std::string(cString) == "-1") return "auto";
+    return cString;
+}
+
+const char* KBNumberToCString(int kb){
+    int mb = kb/1024;
+    return string(IntToStr(mb) + " MB").c_str();
+}
+
 // Main code
 int main(int, char**)
 {
@@ -85,6 +96,8 @@ int main(int, char**)
     agsData.MergeIn(agsData_current);
 
     vector<string> scalingOptions = {"max_round", "stretch", "proportional", "1", "2", "3" };
+    vector<string> filterOptions = { "none", "stdscale" };
+
 #ifdef LINUX
     vector<string> soundOptionsDigiid = { "auto", "none", "ALSA", "ARTS", "ESSD", "JACK", "OSSD", "SGIA", "SDL" };
     vector<string> soundOptionsMidiid = { "auto","none","AMID", "OSSM"};
@@ -177,16 +190,45 @@ int main(int, char**)
 
         int width, height;
         SDL_GetWindowSize(window, &width, &height);
-        ImGui::SetNextWindowPos(ImVec2(.0f, .0f), ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(width+2, height+2), ImGuiCond_Always);
+
+
+        if(ImGui::BeginMainMenuBar()){
+
+            if(ImGui::BeginMenu("File", true)){
+                if(ImGui::MenuItem("Reset Config to Game Default")){
+                    agsData.SetSaneInitialValue();
+                    agsData.MergeIn(agsData_default);
+                }
+                if(ImGui::MenuItem("Reset Config to Current")){
+                    agsData.SetSaneInitialValue();
+                    agsData.MergeIn(agsData_current);
+                }
+                if(ImGui::MenuItem("Exit and Save")){
+                    saveBeforeQuit = true;
+                    break;
+                }
+                if(ImGui::MenuItem("Exit")){
+                    break;
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+        ImVec2 menuSize = ImGui::GetItemRectSize();
+
+
+        ImGui::SetNextWindowPos(ImVec2(.0f, menuSize.y+.0f), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(width+2, -menuSize.y+height+2), ImGuiCond_Always);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         static float f = 0.0f;
         static int counter = 0;
 
 
 
-        ImGui::Begin("AGS Config",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove |ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
+        ImGui::Begin("AGS Config",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );
         ImGui::PopStyleVar();
+
+
 
         ImGui::SetNextTreeNodeOpen(true,ImGuiCond_Once);
         if(ImGui::TreeNode("Graphics options")) {
@@ -234,9 +276,23 @@ int main(int, char**)
                 ImGui::EndCombo();
             }
 
+            ImGui::Text("Filter:");
+            ImGui::SameLine();
+            if (ImGui::BeginCombo("##Filter", agsData.graphics.filter.value().c_str())) {
+                vector<string>::iterator it;
+                for (it = filterOptions.begin();
+                     it != filterOptions.end();
+                     it++) {
+
+                    if (ImGui::Selectable(it->c_str())) agsData.graphics.filter = it->c_str();
+                }
+
+                ImGui::EndCombo();
+            }
+
             ImGui::Text("Sprite Cache Maximum Size:");
             ImGui::SameLine();
-            if (ImGui::BeginCombo("##Sprite Cache", IntToStr(agsData.misc.cachemax.value()).c_str())) {
+            if (ImGui::BeginCombo("##Sprite Cache", KBNumberToCString(agsData.misc.cachemax.value()))) {
                 vector<string>::iterator it;
                 vector<int>::iterator it2;
                 for (int i = 0;
@@ -265,7 +321,7 @@ int main(int, char**)
 
             ImGui::Text("Sound Driver:");
             ImGui::SameLine();
-            if (ImGui::BeginCombo("##Sound Driver", agsData.sound.digiid.value().c_str())) {
+            if (ImGui::BeginCombo("##Sound Driver", NumberToAutoOrNone(agsData.sound.digiid.value().c_str()))) {
                 vector<string>::iterator it;
                 for (it = soundOptionsDigiid.begin();
                      it != soundOptionsDigiid.end();
@@ -279,7 +335,7 @@ int main(int, char**)
 
             ImGui::Text("MIDI Driver:");
             ImGui::SameLine();
-            if (ImGui::BeginCombo("##MIDI Driver", agsData.sound.midiid.value().c_str())) {
+            if (ImGui::BeginCombo("##MIDI Driver", NumberToAutoOrNone(agsData.sound.midiid.value().c_str()))) {
                 vector<string>::iterator it;
                 for (it = soundOptionsMidiid.begin();
                      it != soundOptionsMidiid.end();
