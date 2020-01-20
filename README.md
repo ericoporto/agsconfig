@@ -37,3 +37,19 @@ This project uses the following libraries that are already supplied in the repos
 This project uses CMake as a build system, at least version 3.13, so you will have to install it. It should just work with the CMake provided by CLion, so should just load it if editing on it. On Visual Studio, you need to install the CMake tools provided by the Visual Studio installer, and later open this directory through open folder, [more details supplied on it's official docs...](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=vs-2019#ide-integration). On MacOS you will need XCode installed.
 
 On Linux, you will need additionally the packages `libgl1-mesa-dev` and `mesa-common-dev` (both are available in apt and provide libGL and libdl, needed for linking).
+
+## License
+
+AGS Config is made by Érico Vieira Porto and provided with MIT license, see [`LICENSE`](https://github.com/ericoporto/agsconfig/blob/master/LICENSE).
+
+SDL (Simple DirectMedia Layer) is by Sam Lantinga and provided with as is with it's own license, see [`COPYING.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/SDL2-2.0.10/COPYING.txt).
+
+Dear ImGui is made by Omar Cornut and provided with MIT license, see [`LICENSE.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/imgui/LICENSE.txt).
+
+IniPP is made by Matthias C. M. Troffaes and provided with MIT license, see [`/LICENSE.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/inipp/LICENSE.txt).
+
+optional lite is distributed under the Boost Software License, see [`LICENSE.txt`](https://github.com/ericoporto/agsconfig/blob/master/libs/optional-lite/LICENSE.txt).
+
+tiny-process-library is made by Ole Christian Eidheim and provided with MIT license, see [`LICENSE`](https://github.com/ericoporto/agsconfig/blob/master/libs/tiny-process-library/LICENSE).
+
+Dirent Windows interface is made by Toni Ronkko and provided with MIT license, see [`LICENSE`](https://github.com/ericoporto/agsconfig/blob/master/libs/dirent/LICENSE).
