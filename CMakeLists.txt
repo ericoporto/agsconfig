@@ -15,10 +15,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     # WIN32 is set by CMake for any Windows platform
+	add_definitions(-DWIN32=1)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(LINUX TRUE)
+	add_definitions(-DLINUX=1)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(MACOS TRUE)
+	add_definitions(-DMACOS=1)
 	set(Doptional_CONFIG_SELECT_OPTIONAL optional_OPTIONAL_NONSTD)
 else ()
     message(FATAL_ERROR "Unsupported system: ${CMAKE_SYSTEM_NAME}")

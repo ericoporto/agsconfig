@@ -85,8 +85,18 @@ int main(int, char**)
     agsData.MergeIn(agsData_current);
 
     vector<string> scalingOptions = {"max_round", "stretch", "proportional", "1", "2", "3" };
+#ifdef LINUX
     vector<string> soundOptionsDigiid = { "auto", "none", "ALSA", "ARTS", "ESSD", "JACK", "OSSD", "SGIA", "SDL" };
     vector<string> soundOptionsMidiid = { "auto","none","AMID", "OSSM"};
+#elif WIN32
+    vector<string> soundOptionsDigiid = { "auto", "none","DXA","AXA","WOA"};
+    vector<string> soundOptionsMidiid = { "auto","none","W32M","W32A"};
+#else
+    //Need to figure out what's available on MacOS!
+    vector<string> soundOptionsDigiid = { "auto", "none"};
+    vector<string> soundOptionsMidiid = { "auto","none"};
+#endif
+
     vector<string> spriteCacheOptions = { "16 MB","32 MB","64 MB", "128 MB (default)","256 MB","512 MB"};
     vector<int> spriteCacheOptions_value = { 16*1024,32*1024,64*1024, 128*1024,256*1024,512*1024};
 
