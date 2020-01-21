@@ -21,6 +21,8 @@ executable = mygame
 On MacOS, set the value of the executable to the binary of the AGS Engine and certify the AGS Engine is finding your 
 game on execution. For now, it also requires marking it as executable with `chmod +x agsconfig` - or the name you set for this utility.
 
+If you are making an Adventure Game Studio with Joystick compatibility, this tool also has gamepad controls supplied by ImGui, which should make possible to configure your AGS game and launch it from your sofa.
+
 ## Embedded project libraries
 
 This project uses the following libraries that are already supplied in the repository for simplicity
