@@ -19,7 +19,7 @@ executable = mygame
 ```
 
 On MacOS, set the value of the executable to the binary of the AGS Engine and certify the AGS Engine is finding your 
-game on execution.
+game on execution. For now, it also requires marking it as executable with `chmod +x agsconfig` - or the name you set for this utility.
 
 ## Embedded project libraries
 
