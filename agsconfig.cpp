@@ -14,6 +14,12 @@
 #include "DroidSans.h"
 #include "AgsConfigCore.h"
 
+int ClampInt(int value, int min, int max) {
+    if (value > max) return max;
+    else if (value < min) return min;
+    return value;
+}
+
 // Main code
 int main(int, char**)
 {
@@ -46,8 +52,8 @@ int main(int, char**)
         fprintf(stderr, "Failed to obtain bounds of display 0: %s\n", SDL_GetError());
         exit(1);
     }
-    int win_w = display_bounds.w * 6 / 8;
-    int win_h = display_bounds.h * 7 / 8;
+    int win_w = ClampInt( (int)(dpi_scaling*580),display_bounds.w * 3 / 8, display_bounds.w * 7 / 8);
+    int win_h = ClampInt( (int)(dpi_scaling*580),display_bounds.h * 4 / 8, display_bounds.h * 7 / 8);
 
     AgsConfigCore agsConfig;
 
@@ -60,9 +66,16 @@ int main(int, char**)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
-    ImGui::GetStyle().ScaleAllSizes(dpi_scaling);
-    ImGui::GetIO().FontGlobalScale = dpi_scaling;
-    ImGui::GetIO().DisplayFramebufferScale = {dpi_scaling, dpi_scaling};
+    // Setup Dear ImGui style
+    ImGui::StyleColorsLight();
+    //ImGui::StyleColorsClassic();
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    ImGuiIO& io = ImGui::GetIO();
+
+    style.ScaleAllSizes(dpi_scaling);
+    io.FontGlobalScale = dpi_scaling*0.5; // this makes the font looks crispy
+    io.DisplayFramebufferScale = {dpi_scaling, dpi_scaling};
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -78,15 +91,81 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
-    ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(DroidSans_compressed_data,DroidSans_compressed_size,dpi_scaling * 14.0f);
+    ImFontConfig fontConfig;
+    fontConfig.OversampleH = 6;
+    fontConfig.OversampleV = 3;
+    fontConfig.SizePixels = dpi_scaling * 12.0f * 2.0;
+    io.Fonts->AddFontFromMemoryCompressedTTF(DroidSans_compressed_data,DroidSans_compressed_size,dpi_scaling * 12.0f*2.0, &fontConfig); // times 2 here is due FontGlobalScale
+    io.Fonts->Build();
 
-    ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-    // Setup Dear ImGui style
-    ImGui::StyleColorsLight();
-    //ImGui::StyleColorsClassic();
+    int hspacing = 8;
+    int vspacing = 6;
+
+    style.DisplaySafeAreaPadding = ImVec2(0, 0);
+    style.WindowPadding = ImVec2(hspacing/2, vspacing);
+    style.FramePadding = ImVec2(hspacing, vspacing);
+    style.ItemSpacing = ImVec2(hspacing, vspacing);
+    style.ItemInnerSpacing = ImVec2(hspacing, vspacing);
+    style.IndentSpacing = 20.0f;
+
+    style.WindowRounding = 0.0f;
+    style.FrameRounding = 0.0f;
+
+    style.WindowBorderSize = 0.0f;
+    style.FrameBorderSize = 1.0f;
+    style.PopupBorderSize = 1.0f;
+
+    style.ScrollbarSize = 20.0f;
+    style.ScrollbarRounding = 0.0f;
+    style.GrabMinSize = 14.0f;
+    style.GrabRounding = 0.0f;
+
+    ImVec4 white = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    ImVec4 transparent = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    ImVec4 dark = ImVec4(0.00f, 0.00f, 0.00f, 0.20f);
+    ImVec4 darker = ImVec4(0.00f, 0.00f, 0.00f, 0.50f);
+
+    ImVec4 background = ImVec4(0.95f, 0.95f, 0.95f, 1.00f);
+    ImVec4 text = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    ImVec4 border = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
+    ImVec4 grab = ImVec4(0.69f, 0.69f, 0.69f, 1.00f);
+    ImVec4 header = ImVec4(0.86f, 0.86f, 0.86f, 1.00f);
+    ImVec4 active = ImVec4(0.00f, 0.47f, 0.84f, 1.00f);
+    ImVec4 hover = ImVec4(0.00f, 0.47f, 0.84f, 0.20f);
+
+    style.Colors[ImGuiCol_Text] = text;
+    style.Colors[ImGuiCol_WindowBg] = background;
+    style.Colors[ImGuiCol_ChildBg] = background;
+    style.Colors[ImGuiCol_PopupBg] = white;
+
+    style.Colors[ImGuiCol_Border] = border;
+    style.Colors[ImGuiCol_BorderShadow] = transparent;
+
+    style.Colors[ImGuiCol_Button] = header;
+    style.Colors[ImGuiCol_ButtonHovered] = hover;
+    style.Colors[ImGuiCol_ButtonActive] = active;
+
+    style.Colors[ImGuiCol_FrameBg] = white;
+    style.Colors[ImGuiCol_FrameBgHovered] = hover;
+    style.Colors[ImGuiCol_FrameBgActive] = active;
+
+    style.Colors[ImGuiCol_MenuBarBg] = header;
+    style.Colors[ImGuiCol_Header] = header;
+    style.Colors[ImGuiCol_HeaderHovered] = hover;
+    style.Colors[ImGuiCol_HeaderActive] = active;
+
+    style.Colors[ImGuiCol_CheckMark] = text;
+    style.Colors[ImGuiCol_SliderGrab] = grab;
+    style.Colors[ImGuiCol_SliderGrabActive] = darker;
+
+    style.Colors[ImGuiCol_ScrollbarBg] = header;
+    style.Colors[ImGuiCol_ScrollbarGrab] = grab;
+    style.Colors[ImGuiCol_ScrollbarGrabHovered] = dark;
+    style.Colors[ImGuiCol_ScrollbarGrabActive] = darker;
+
 
     // Setup Platform/Renderer bindings
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
@@ -95,7 +174,6 @@ int main(int, char**)
     bool runTheGameBeforeQuit = false;
     bool saveBeforeQuit = false;
     //ImGuiStyle::ScaleAllSizes(0.5f);
-    //ImGuiStyle& style = ImGui::GetStyle();
 
     // Our state
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
@@ -129,6 +207,10 @@ int main(int, char**)
                 if(ImGui::MenuItem("Reset Config to Current")){
                     agsConfig.ResetConfigToCurrent();
                 }
+
+                if(ImGui::MenuItem("Reset Window Size")){
+                    SDL_SetWindowSize(window, win_w, win_h);
+                }
                 if(ImGui::MenuItem("Exit and Save")){
                     saveBeforeQuit = true;
                     break;
@@ -153,9 +235,7 @@ int main(int, char**)
 
         ImGui::SetNextTreeNodeOpen(true,ImGuiCond_Once);
         if(ImGui::TreeNode("Graphics options")) {
-            ImGui::Text("Driver:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##driver", agsConfig.GetGraphicsDriver().c_str())) {
+            if (ImGui::BeginCombo("Driver", agsConfig.GetGraphicsDriver().c_str())) {
                 vector<string>::iterator it;
                 for (it = agsConfig.GetOptionsGraphicsDriver()->begin();
                      it != agsConfig.GetOptionsGraphicsDriver()->end();
@@ -163,15 +243,12 @@ int main(int, char**)
 
                     if (ImGui::Selectable(it->c_str()))  agsConfig.SetGraphicsDriver(*it);
                 }
-
                 ImGui::EndCombo();
             }
 
             ImGui::Checkbox("Start in windowed mode", agsConfig.GraphicsWindowed);
 
-            ImGui::Text("Fullscreen scale:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##Fullscreen scale", agsConfig.GetFullscreenScale().c_str())) {
+            if (ImGui::BeginCombo("Fullscreen scale", agsConfig.GetFullscreenScale().c_str())) {
                 vector<string>::iterator it;
                 for (it = agsConfig.GetOptionsFullscrenScaling()->begin();
                      it != agsConfig.GetOptionsFullscrenScaling()->end();
@@ -179,13 +256,10 @@ int main(int, char**)
 
                     if (ImGui::Selectable(it->c_str())) agsConfig.SetFullscreenScale(*it);
                 }
-
                 ImGui::EndCombo();
             }
 
-            ImGui::Text("Windowed scale:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##Windowed scale",  agsConfig.GetWindowedScale().c_str())) {
+            if (ImGui::BeginCombo("Windowed scale",  agsConfig.GetWindowedScale().c_str())) {
                 vector<string>::iterator it;
                 for (it = agsConfig.GetOptionsWindowedScaling()->begin();
                      it != agsConfig.GetOptionsWindowedScaling()->end();
@@ -193,13 +267,10 @@ int main(int, char**)
 
                     if (ImGui::Selectable(it->c_str())) agsConfig.SetWindowedScale(*it);
                 }
-
                 ImGui::EndCombo();
             }
 
-            ImGui::Text("Filter:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##Filter", agsConfig.GetGraphicsFilter().c_str())) {
+            if (ImGui::BeginCombo("Filter", agsConfig.GetGraphicsFilter().c_str())) {
                 vector<string>::iterator it;
                 for (it = agsConfig.GetOptionsFilter()->begin();
                      it != agsConfig.GetOptionsFilter()->end();
@@ -207,13 +278,10 @@ int main(int, char**)
 
                     if (ImGui::Selectable(it->c_str())) agsConfig.SetGraphicsFilter(*it);
                 }
-
                 ImGui::EndCombo();
             }
 
-            ImGui::Text("Sprite Cache Maximum Size:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##Sprite Cache", agsConfig.GetSpriteCacheMaxSize().c_str())) {
+            if (ImGui::BeginCombo("Sprite Cache Maximum Size", agsConfig.GetSpriteCacheMaxSize().c_str())) {
                 for (unsigned int i = 0;
                      i < agsConfig.GetOptionsSpriteCache()->size();
                      i++) {
@@ -221,7 +289,6 @@ int main(int, char**)
                     if (ImGui::Selectable( (*(agsConfig.GetOptionsSpriteCache()))[i].c_str()))
                         agsConfig.SetSpriteCacheMaxSize((*(agsConfig.GetOptionsSpriteCacheValue()))[i]);
                 }
-
                 ImGui::EndCombo();
             }
 
@@ -235,9 +302,7 @@ int main(int, char**)
 
         ImGui::SetNextTreeNodeOpen(true,ImGuiCond_Once);
         if(ImGui::TreeNode("Sound options")) {
-            ImGui::Text("Sound Driver:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##Sound Driver", agsConfig.GetSoundDriver().c_str() )) {
+            if (ImGui::BeginCombo("Sound Driver", agsConfig.GetSoundDriver().c_str() )) {
                 vector<string>::iterator it;
                 for (it = agsConfig.GetOptionsSoundDigiid()->begin();
                      it != agsConfig.GetOptionsSoundDigiid()->end();
@@ -249,9 +314,7 @@ int main(int, char**)
                 ImGui::EndCombo();
             }
 
-            ImGui::Text("MIDI Driver:");
-            ImGui::SameLine();
-            if (ImGui::BeginCombo("##MIDI Driver", agsConfig.GetMidiDriver().c_str() )) {
+            if (ImGui::BeginCombo("MIDI Driver", agsConfig.GetMidiDriver().c_str() )) {
                 vector<string>::iterator it;
                 for (it = agsConfig.GetOptionsSoundMidiid()->begin();
                      it != agsConfig.GetOptionsSoundMidiid()->end();
