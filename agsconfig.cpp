@@ -65,7 +65,7 @@ int main(int, char**)
     ImGui::GetIO().DisplayFramebufferScale = {dpi_scaling, dpi_scaling};
     ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(DroidSans_compressed_data,DroidSans_compressed_size,dpi_scaling * 14.0f);
 
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -80,6 +80,7 @@ int main(int, char**)
     bool runTheGameBeforeQuit = false;
     bool saveBeforeQuit = false;
     //ImGuiStyle::ScaleAllSizes(0.5f);
+    //ImGuiStyle& style = ImGui::GetStyle();
 
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -96,20 +97,14 @@ int main(int, char**)
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
-
     // Our state
     ImVec4 clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
-    ImGuiStyle& style = ImGui::GetStyle();
 
-        // Main loop
+    // Main loop
     bool done = false;
     while (!done)
     {
         // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
@@ -150,10 +145,10 @@ int main(int, char**)
         ImGui::SetNextWindowPos(ImVec2(.0f, menuSize.y+.0f), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(width+2, -menuSize.y+height+2), ImGuiCond_Always);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        static float f = 0.0f;
-        static int counter = 0;
-
-        ImGui::Begin("AGS Config",NULL,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        
+        ImGui::Begin("AGS Config",nullptr,ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse );
+        ImGui::PopStyleVar();
         ImGui::PopStyleVar();
 
         ImGui::SetNextTreeNodeOpen(true,ImGuiCond_Once);
@@ -166,7 +161,7 @@ int main(int, char**)
                      it != agsConfig.GetOptionsGraphicsDriver()->end();
                      it++) {
 
-                    if (ImGui::Selectable(it->c_str()))  agsConfig.SetGraphicsDriver(it->c_str());
+                    if (ImGui::Selectable(it->c_str()))  agsConfig.SetGraphicsDriver(*it);
                 }
 
                 ImGui::EndCombo();
@@ -182,7 +177,7 @@ int main(int, char**)
                      it != agsConfig.GetOptionsFullscrenScaling()->end();
                      it++) {
 
-                    if (ImGui::Selectable(it->c_str())) agsConfig.SetFullscreenScale(it->c_str());
+                    if (ImGui::Selectable(it->c_str())) agsConfig.SetFullscreenScale(*it);
                 }
 
                 ImGui::EndCombo();
@@ -196,7 +191,7 @@ int main(int, char**)
                      it != agsConfig.GetOptionsWindowedScaling()->end();
                      it++) {
 
-                    if (ImGui::Selectable(it->c_str())) agsConfig.SetWindowedScale(it->c_str());
+                    if (ImGui::Selectable(it->c_str())) agsConfig.SetWindowedScale(*it);
                 }
 
                 ImGui::EndCombo();
@@ -210,7 +205,7 @@ int main(int, char**)
                      it != agsConfig.GetOptionsFilter()->end();
                      it++) {
 
-                    if (ImGui::Selectable(it->c_str())) agsConfig.SetGraphicsFilter(it->c_str());
+                    if (ImGui::Selectable(it->c_str())) agsConfig.SetGraphicsFilter(*it);
                 }
 
                 ImGui::EndCombo();
@@ -248,7 +243,7 @@ int main(int, char**)
                      it != agsConfig.GetOptionsSoundDigiid()->end();
                      it++) {
 
-                    if (ImGui::Selectable(it->c_str()))  agsConfig.SetSoundDriver(it->c_str());
+                    if (ImGui::Selectable(it->c_str()))  agsConfig.SetSoundDriver(*it);
                 }
 
                 ImGui::EndCombo();
@@ -262,7 +257,7 @@ int main(int, char**)
                      it != agsConfig.GetOptionsSoundMidiid()->end();
                      it++) {
 
-                    if (ImGui::Selectable(it->c_str())) agsConfig.SetMidiDriver(it->c_str());
+                    if (ImGui::Selectable(it->c_str())) agsConfig.SetMidiDriver(*it);
                 }
 
                 ImGui::EndCombo();

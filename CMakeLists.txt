@@ -61,6 +61,8 @@ if (WIN32)
 			agsconfigCore/AgsTold.h
 			agsconfigCore/AgsData.cpp
 			agsconfigCore/AgsData.h
+			agsconfigCore/AgsConfigCore.cpp
+			agsconfigCore/AgsConfigCore.h
 			libs/inipp/inipp/inipp.h
 			libs/imgui/imgui.h
 			libs/imgui/imgui.cpp
@@ -83,6 +85,8 @@ else ()
 			agsconfigCore/AgsTold.h
 			agsconfigCore/AgsData.cpp
 			agsconfigCore/AgsData.h
+			agsconfigCore/AgsConfigCore.cpp
+			agsconfigCore/AgsConfigCore.h
 			libs/inipp/inipp/inipp.h
 			libs/imgui/imgui.h
 			libs/imgui/imgui.cpp
@@ -92,7 +96,7 @@ else ()
 			libs/imgui/examples/imgui_impl_sdl.cpp
 			libs/imgui/examples/imgui_impl_sdl.h
 			libs/imgui/examples/imgui_impl_opengl2.h
-			libs/imgui/examples/imgui_impl_opengl2.cpp agsconfigCore/AgsConfigCore.cpp agsconfigCore/AgsConfigCore.h)
+			libs/imgui/examples/imgui_impl_opengl2.cpp )
 endif ()
 
 if(WIN32)
