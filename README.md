@@ -4,7 +4,7 @@
 
 agsconfig tries to give similar functionality to the traditional winsetup.exe of Adventure Game Studio, but cross platform
 
-![](https://user-images.githubusercontent.com/2244442/72697367-8be01e80-3b1e-11ea-84ce-9d6fc45d3fd2.png)
+![](https://user-images.githubusercontent.com/2244442/74112534-41314f80-4b7c-11ea-9ff3-b13c402a59ec.png)
 
 ## Using with your game
 
