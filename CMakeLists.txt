@@ -53,14 +53,14 @@ if (WIN32)
 	add_executable (AGSCONFIG WIN32
 			DroidSans.h
 			agsconfig.cpp
-			AgsConfigIniSettings.h
-			AgsConfigIniSettings.cpp
-			AgsConfigUtilStr.h
-			AgsConfigUtilStr.cpp
-			AgsTold.cpp
-			AgsTold.h
-			AgsData.cpp
-			AgsData.h
+			agsconfigCore/AgsConfigIniSettings.h
+			agsconfigCore/AgsConfigIniSettings.cpp
+			agsconfigCore/AgsConfigUtilStr.h
+			agsconfigCore/AgsConfigUtilStr.cpp
+			agsconfigCore/AgsTold.cpp
+			agsconfigCore/AgsTold.h
+			agsconfigCore/AgsData.cpp
+			agsconfigCore/AgsData.h
 			libs/inipp/inipp/inipp.h
 			libs/imgui/imgui.h
 			libs/imgui/imgui.cpp
@@ -75,14 +75,14 @@ else ()
 	add_executable (AGSCONFIG
 			DroidSans.h
 			agsconfig.cpp
-			AgsConfigIniSettings.h
-			AgsConfigIniSettings.cpp
-			AgsConfigUtilStr.h
-			AgsConfigUtilStr.cpp
-			AgsTold.cpp
-			AgsTold.h
-			AgsData.cpp
-			AgsData.h
+			agsconfigCore/AgsConfigIniSettings.h
+			agsconfigCore/AgsConfigIniSettings.cpp
+			agsconfigCore/AgsConfigUtilStr.h
+			agsconfigCore/AgsConfigUtilStr.cpp
+			agsconfigCore/AgsTold.cpp
+			agsconfigCore/AgsTold.h
+			agsconfigCore/AgsData.cpp
+			agsconfigCore/AgsData.h
 			libs/inipp/inipp/inipp.h
 			libs/imgui/imgui.h
 			libs/imgui/imgui.cpp
@@ -92,7 +92,7 @@ else ()
 			libs/imgui/examples/imgui_impl_sdl.cpp
 			libs/imgui/examples/imgui_impl_sdl.h
 			libs/imgui/examples/imgui_impl_opengl2.h
-			libs/imgui/examples/imgui_impl_opengl2.cpp )
+			libs/imgui/examples/imgui_impl_opengl2.cpp agsconfigCore/AgsConfigCore.cpp agsconfigCore/AgsConfigCore.h)
 endif ()
 
 if(WIN32)
@@ -125,6 +125,8 @@ elseif(WIN32)
 	target_link_libraries(AGSCONFIG PUBLIC opengl32)
 	option (HAVE_LIBC  "Prevent error LNK2005: __ftol2_sse already defined in SDL2d.lib" TRUE)
 endif()
+
+target_include_directories(AGSCONFIG PRIVATE agsconfigCore)
 
 target_include_directories(AGSCONFIG PRIVATE libs/SDL2-2.0.10/include)
 
