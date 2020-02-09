@@ -10,6 +10,8 @@
 #include "inipp.h"
 #include "AgsConfigUtilStr.h"
 #include "AgsConfigIniSettings.h"
+using std::string;
+using std::vector;
 
 const char* NumberToAutoOrNone(const char * cString) {
     if(std::string(cString) == "0") return "none";
@@ -170,7 +172,10 @@ void AgsConfigCore::SetGraphicsFilter(string graphics_filter) {
 }
 
 string AgsConfigCore::GetSpriteCacheMaxSize() {
-    return KBNumberToCString(agsData.misc.cachemax.value());
+    if(agsData.misc.cachemax.has_value()) {
+        return KBNumberToCString(agsData.misc.cachemax.value());
+    }
+    return KBNumberToCString(128*1024);
 }
 
 void AgsConfigCore::SetSpriteCacheMaxSize(int max_cache) {
