@@ -201,3 +201,16 @@ void AgsConfigCore::SetMidiDriver(string midi_driver) {
 string AgsConfigCore::GetTitleText() {
     return agsTold.config_AT_misc.titletext;
 }
+
+int AgsConfigCore::GetNativeResolutionWidth() {
+    return agsTold.config_AT_misc.game_width;
+}
+
+int AgsConfigCore::GetNativeResolutionHeight() {
+    return agsTold.config_AT_misc.game_height;
+}
+
+int AgsConfigCore::GetNativeColorDepth() {
+    return agsTold.config_AT_misc.gamecolordepth;
+}
+

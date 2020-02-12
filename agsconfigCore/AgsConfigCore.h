@@ -90,6 +90,11 @@ public:
 
     string GetTitleText();
 
+
+    int GetNativeResolutionWidth();
+    int GetNativeResolutionHeight();
+    int GetNativeColorDepth();
+
     AgsConfigCore();
     ~AgsConfigCore(void);
 };

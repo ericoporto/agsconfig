@@ -235,6 +235,9 @@ int main(int, char**)
 
         ImGui::SetNextTreeNodeOpen(true,ImGuiCond_Once);
         if(ImGui::TreeNode("Graphics options")) {
+            ImGui::Text("Native game resolution: %d x %d", agsConfig.GetNativeResolutionWidth(),agsConfig.GetNativeResolutionHeight());
+            ImGui::Text("Native game color depth: %d", agsConfig.GetNativeColorDepth());
+
             if (ImGui::BeginCombo("Driver", agsConfig.GetGraphicsDriver().c_str())) {
                 vector<string>::iterator it;
                 for (it = agsConfig.GetOptionsGraphicsDriver()->begin();
