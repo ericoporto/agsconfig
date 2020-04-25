@@ -5,7 +5,7 @@ project(tiny-process-library)
 if(MSVC)
   add_definitions(/D_CRT_SECURE_NO_WARNINGS)
 else()
-  add_compile_options(-std=c++11 -Wall -Wextra)
+  add_compile_options(-std=c++14 -Wall -Wextra)
 endif()
 
 add_library(tiny-process-library process.cpp)
