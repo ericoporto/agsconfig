@@ -79,7 +79,7 @@ void AgsConfigCore::RunGame() {
 
 void AgsConfigCore::Initialize() {
 #ifdef LINUX
-    SoundOptionsDigiid = { "auto", "none", "ALSA", "ARTS", "ESSD", "JACK", "OSSD", "SGIA", "SDL" };
+    SoundOptionsDigiid = { "auto", "none", "ALSA", "ARTS", "ESSD", "JACK", "OSSD", "SGIA", "SDL2" };
     SoundOptionsMidiid = { "auto","none","AMID", "OSSM"};
 #elif WIN32
     SoundOptionsDigiid = { "auto", "none","DXA","AXA","WOA"};
