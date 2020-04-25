@@ -28,7 +28,7 @@ target_include_directories(tiny-process-library PUBLIC ${CMAKE_CURRENT_SOURCE_DI
 option(BUILD_TESTING OFF)
 
 # if tiny-process-library is not a sub-project:
-if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+if(CMAKE_SOURCE_DIR STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   add_executable(examples examples.cpp)
   target_link_libraries(examples tiny-process-library)
   
