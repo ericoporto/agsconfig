@@ -40,6 +40,13 @@ This project uses CMake as a build system, at least version 3.13, so you will ha
 
 On Linux, you will need additionally the packages `libgl1-mesa-dev` and `mesa-common-dev` (both are available in apt and provide libGL and libdl, needed for linking).
 
+### Building on Ubuntu Desktop
+
+To build agsconfig and all the libraries here you may need to install the following dependencies
+```
+sudo apt-get -y install libdbus-glib-1-2 libdbus-glib-1-dev libasound2-dev libpulse-dev libsndio-dev libxcursor-dev libxinerama-dev install libxi-dev dbus libdbus-1-dev libudev-dev libibus-1.0-dev
+```
+
 ## License
 
 AGS Config is made by Érico Vieira Porto and provided with MIT license, see [`LICENSE`](https://github.com/ericoporto/agsconfig/blob/master/LICENSE).
